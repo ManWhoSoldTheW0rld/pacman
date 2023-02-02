@@ -4,6 +4,7 @@ class GameBoard {
     constructor(DOMGrid) {
         this.dotCount = 0;
         this.grid = [];
+        
         this.DOMGrid = DOMGrid;
     }
 
