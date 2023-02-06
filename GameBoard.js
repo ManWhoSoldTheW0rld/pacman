@@ -23,6 +23,8 @@ class GameBoard {
 
         level.forEach((square, i) => {
             const div = document.createElement('div');
+
+            // div.classList.add('square', "ghost", "pinky");
             div.classList.add('square', CLASS_LIST[square]);
             div.style.cssText = `width: ${CELL_SIZE}px; height: ${CELL_SIZE}px;`;
             this.DOMGrid.appendChild(div);

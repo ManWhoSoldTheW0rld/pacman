@@ -25,7 +25,7 @@ const startButton = document.querySelector('#start-button');
 
 //Game Const
 const POWER_PILL_TIME = 10000; //ms
-const GLOBAL_SPEED = 100; //ms
+const GLOBAL_SPEED = 80; //ms
 const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
 
 //Initial Setup
