@@ -8,7 +8,9 @@ class Pacman {
         this.timer = 0;
         this.powerPill = false;
         this.rotation = true;
-        this.isPause = false
+        this.isPause = false;
+        this.top = 0;
+        this.left = 0;
     }
 
     shouldMove() {

@@ -42,12 +42,13 @@ class Ghost {
         this.timer++;
       }
     
-    getNextMove(objectExist) {
+    getNextMove(objectExist, pacman) {
         // Call move algoritm here
         const { nextMovePos, direction } = this.movement(
           this.pos,
           this.dir,
-          objectExist
+          objectExist,
+          pacman
         );
 
         let top = Math.floor(nextMovePos / 20);
