@@ -6,12 +6,6 @@ import Pacman from './Pacman.js';
 import Ghost from './Ghost.js';
 
 //Sounds
-// import soundDot from './sounds/munch.wav';
-// import soundPill from './sounds/pill.wav';
-// import soundGameStart from './sounds/game_start.wav';
-// import soundGameOver from './sounds/death.wav';
-// import soundGhost from './sounds/eat_ghost.wav';
-
  const soundDot = './sounds/munch.wav';
  const  soundPill = './sounds/pill.wav';
  const  soundGameStart = './sounds/game_start.wav';
@@ -123,6 +117,7 @@ const startGame = () => {
 
     startButton.classList.add("hide");
     gameBoard.createGrid(LEVEL);
+    gameBoard.createMaze(LEVEL);
 
     const pacman = new Pacman(2, 287);
 

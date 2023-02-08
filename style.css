@@ -72,7 +72,186 @@ html, body {
 }
 
 .wall {
-  border: 1px solid blue;
+  border: 0px solid black;
+  /* height: 10px;
+  width: 10px; */
+}
+
+.horizontal {
+  background-color: blue;
+  margin-top: 5px;
+  height: 30px;
+  width: 40px;
+}
+
+.vertical {
+  height: 40px;
+  width: 30px;
+  margin-left: 5px;
+  background-color: blue;
+}
+
+.top_right_corner {
+  margin-top: 5px;
+  margin-left: 5px;
+  background-color: blue;
+  border-radius: 5px 0 0 0;
+  height: 35px;
+  width: 35px;
+}
+
+.top_right_corner_2 {
+  margin-top: 30px;
+  margin-left: 30px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-top-left-radius: 5px;
+}
+
+.top_left_corner {
+  margin-top: 5px;
+  position: relative;
+  background-color: blue;
+  border-radius: 0 5px 0 0;
+  height: 35px;
+  width: 35px;
+}
+
+.top_left_corner_2 {
+  margin-top: 30px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-top-right-radius: 5px;
+}
+
+.bottom_left_corner {
+  margin-left: 5px;
+  position: relative;
+  background-color: blue;
+  border-radius: 0 0 0 5px;
+  height: 35px;
+  width: 35px;
+}
+
+.bottom_left_corner_2 {
+  margin-left: 30px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-bottom-left-radius: 5px;
+}
+
+.bottom_right_corner {
+  position: relative;
+  background-color: blue;
+  border-radius: 0 0 5px 0;
+  height: 35px;
+  width: 35px;
+}
+
+.bottom_right_corner_2 {
+  margin-left: 0px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-bottom-right-radius: 5px;
+}
+
+.right_end {
+  background-color: blue;
+  margin-top: 5px;
+  margin-left: 5px;
+  height: 30px;
+  width: 35px;
+  border-radius: 5px 0 0 5px 
+}
+
+.left_end {
+  background-color: blue;
+  margin-top: 5px;
+  height: 30px;
+  width: 35px;
+  border-radius: 0 5px 5px 0 
+}
+
+.top_end {
+  background-color: blue;
+  margin-top: 5px;
+  margin-left: 5px;
+  height: 35px;
+  width: 30px;
+  border-radius: 5px 5px 0 0 
+}
+
+.bottom_end {
+  background-color: blue;
+  margin-left: 5px;
+  height: 35px;
+  width: 30px;
+  border-radius: 0 0 5px 5px 
+}
+
+.double_left {
+  position: relative;
+  background-color: blue;
+  /* border-radius: 0 0 5px 0; */
+  /* border: 1px solid orange; */
+  height: 40px;
+  width: 35px;
+}
+
+.double_left_2 {
+  /* margin-top: 30px; */
+  margin-left: 0px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-bottom-right-radius: 5px;
+  /* border: 1px solid orange */
+}
+
+.double_left_3 {
+  margin-top: 30px;
+  margin-left: 0px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-top-right-radius: 5px;
+}
+
+.double_right {
+  position: relative;
+  background-color: blue;
+  margin-left: 5px;
+  height: 40px;
+  width: 35px;
+}
+
+.double_right_2 {
+  margin-left: 30px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-bottom-left-radius: 5px;
+}
+
+.double_right_3 {
+  margin-top: 30px;
+  margin-left: 30px;
+  height: 5px;
+  width: 5px;
+  background-color: black;
+  border-top-left-radius: 5px;
+}
+
+.wall_ghostlair_2{
+  margin-left: -5px;
+  height: 5px;
+  width: 50px;
+  margin-top: 15px;
+  background-color: pink !important;
 }
 
 .dot {
@@ -149,16 +328,16 @@ html, body {
   border: none;
   border-radius: 50%;
   clip-path: polygon(
-    0 0,
-    20px 0,
-    20px -5px,
-    8px 10px,
-    20px 25px,
-    20px 20px,
-    0 20px
+  0 0,
+  20px 0,
+  20px -5px,
+  8px 10px,
+  20px 25px,
+  20px 20px,
+  0 20px
   );
   animation: chew 0.2s linear forwards infinite;
-}
+ }
 
 @keyframes chew {
   50% {
