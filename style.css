@@ -16,7 +16,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2;
 }
 
 #game {
@@ -268,11 +267,12 @@ html, body {
 }
 
 .ghost {
-  position: relative;
+  position: absolute;
   border-radius: 20px 20px 4px 4px;
   border: none;
   width: 40px;
   height: 40px;
+  z-index: 2;
 }
 
 .ghost::before {

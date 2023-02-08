@@ -8,6 +8,7 @@ class Pacman {
         this.timer = 0;
         this.powerPill = false;
         this.rotation = true;
+        this.isPause = false
     }
 
     shouldMove() {
@@ -46,6 +47,10 @@ class Pacman {
 
     handleKeyInput = (e, objectExist) => {
         let dir;
+
+        if (e.keyCode == 80) {
+            this.isPause = !this.isPause;
+        }
     
         if (e.keyCode >= 37 && e.keyCode <= 40) {
           dir = DIRECTIONS[e.key];

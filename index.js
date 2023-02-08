@@ -17,6 +17,7 @@ const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
 const startButton = document.querySelector('#start-button');
 
+
 //Game Const
 const POWER_PILL_TIME = 10000; //ms
 const GLOBAL_SPEED = 80; //ms
@@ -35,7 +36,7 @@ function playAudio(audio) {
     soundEffect.play();
 }
 
-const gameOver = (pacman, grid) => {
+const gameOver = (pacman) => {
     playAudio(soundGameOver)
     document.removeEventListener('keydown', e => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
@@ -52,7 +53,7 @@ const checkCollision = (pacman, ghosts) => {
     if (collidedGhost) {
         if (pacman.powerPill) {
             playAudio(soundGhost);
-            gameBoard.removeObject(collidedGhost.pos, [OBJECT_TYPE.GHOST, OBJECT_TYPE.SCARED, collidedGhost.name]);
+            collidedGhost.setToPosition(collidedGhost.startPos);
             collidedGhost.pos = collidedGhost.startPos;
             score += 100;
         } else {
@@ -64,12 +65,26 @@ const checkCollision = (pacman, ghosts) => {
 }
 
 const gameLoop = (pacman, ghosts = null) => {
+    if (pacman.isPause) {
+        return;
+    }
     // 1. Move Pacman
-    gameBoard.moveCharacter(pacman);
+    gameBoard.movePacman(pacman);
     // 2. Check Ghost collision on the old positions
     checkCollision(pacman, ghosts);
     // 3. Move ghosts
-    ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost));
+    ghosts.forEach((ghost) => {
+        gameBoard.moveGhost(ghost);
+        if (ghost.dir.code == 37  && parseInt(ghost.div.style.left) >= ghost.ghostLeft +4) {
+            ghost.div.style.left = (parseInt(ghost.div.style.left) - 4) + "px";
+        } else if (ghost.dir.code == 38 && parseInt(ghost.div.style.top) >= ghost.ghostTop +4) {
+            ghost.div.style.top = (parseInt(ghost.div.style.top) - 4) + "px";
+        } else if (ghost.dir.code == 39 && parseInt(ghost.div.style.left) <= ghost.ghostLeft - 4) {
+            ghost.div.style.left = (parseInt(ghost.div.style.left) + 4) + "px";
+        } else if (ghost.dir.code == 40 && parseInt(ghost.div.style.top) <= ghost.ghostTop - 4) {
+            ghost.div.style.top = (parseInt(ghost.div.style.top) + 4) + "px";
+        }
+    });
      // 4. Do a new ghost collision check on the new positions
     checkCollision(pacman, ghosts);
 
@@ -97,7 +112,7 @@ const gameLoop = (pacman, ghosts = null) => {
     // 7. Change ghost scare mode depending on powerpill
     if (pacman.powerPill !== powerPillActive) {
         powerPillActive = pacman.powerPill;
-        ghosts.forEach((ghost) => (ghost.isScared = pacman.powerPill));
+        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)));
     }
 
     if (gameBoard.dotCount === 0) {
@@ -127,10 +142,10 @@ const startGame = () => {
     });
 
     const ghosts = [
-        new Ghost(2, 188, randomMovement, OBJECT_TYPE.BLINKY),
-        new Ghost(3, 209, randomMovement, OBJECT_TYPE.PINKY),
-        new Ghost(4, 230, randomMovement, OBJECT_TYPE.INKY),
-        new Ghost(5, 251, randomMovement, OBJECT_TYPE.CLYDE)
+        new Ghost(10, 188, randomMovement, OBJECT_TYPE.BLINKY),
+        new Ghost(10, 209, randomMovement, OBJECT_TYPE.PINKY),
+        new Ghost(10, 230, randomMovement, OBJECT_TYPE.INKY),
+        new Ghost(10, 251, randomMovement, OBJECT_TYPE.CLYDE)
     ];
 
      // Gameloop

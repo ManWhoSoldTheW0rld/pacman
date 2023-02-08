@@ -1,3 +1,4 @@
+import Pacman from './Pacman.js';
 import {GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST} from './setup.js';
 
 class GameBoard {
@@ -75,7 +76,17 @@ class GameBoard {
         this.grid[pos].style.transform = `rotate(${deg}deg)`;
     }
 
-    moveCharacter(character) {
+    moveGhost(character) {
+        if (character.shouldMove()) {
+            const { nextMovePos, direction} = character.getNextMove(
+                this.objectExist
+            );
+            //todo add moving logic here
+            character.setNewPos(nextMovePos, direction);
+        }
+    }
+
+    movePacman(character) {
         if (character.shouldMove()) {
             const { nextMovePos, direction} = character.getNextMove(
                 this.objectExist
