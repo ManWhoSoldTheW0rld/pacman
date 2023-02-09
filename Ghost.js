@@ -1,7 +1,7 @@
-import {OBJECT_TYPE, DIRECTIONS} from './setup.js';
-
+import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, CELL_SIZE} from './setup.js';
+ 
 class Ghost {
-    constructor(speed, startPos, movement, name) {
+    constructor(speed, startPos, movement, name, scaryTarget, scaryFunc) {
         this.name = name;
         this.movement = movement;
         this.startPos = startPos;
@@ -13,6 +13,8 @@ class Ghost {
         this.rotation = false;
         this.ghostTop = 0;
         this.ghostLeft = 0;
+        this.scaryTarget = scaryTarget;
+        this.scaryFunc = scaryFunc;
 
         const div = document.createElement("div");
         div.classList.add("ghost", name);
@@ -23,15 +25,13 @@ class Ghost {
     }
 
     setToPosition(position) {
-       //todo change to const
-       let top = Math.floor(position / 20);
-       let left = position % 20;
+       let top = Math.floor(position / GRID_SIZE);
+       let left = position % GRID_SIZE;
 
-       this.ghostTop = top * 40;
-       this.ghostLeft = left * 40;
+       this.setDivPosition(position);
 
-       this.div.style.left =  left * 40 + "px";
-       this.div.style.top = top * 40 +"px";
+       this.div.style.left =  left * CELL_SIZE + "px";
+       this.div.style.top = top * CELL_SIZE +"px";
     }
 
     shouldMove() {
@@ -40,25 +40,41 @@ class Ghost {
           return true;
         }
         this.timer++;
-      }
-    
+    }
+
+    setDivPosition(position) {
+        let top = Math.floor(position / GRID_SIZE);
+        let left = position % GRID_SIZE;
+
+        this.ghostTop = top * CELL_SIZE;
+        this.ghostLeft = left * CELL_SIZE;
+    }
+
     getNextMove(objectExist, pacman, ghosts) {
-        // Call move algoritm here
-        const { nextMovePos, direction } = this.movement(
-          this.pos,
-          this.dir,
-          objectExist,
-          pacman,
-          ghosts
-        );
+    
+        if (this.isScared) {
+            const { nextMovePos, direction } = this.scaryFunc(
+                this.pos,
+                this.dir,
+                objectExist,
+                this.scaryTarget,
+            );
 
-        let top = Math.floor(nextMovePos / 20);
-        let left = nextMovePos % 20;
+            this.setDivPosition(nextMovePos);
+            return { nextMovePos, direction };
 
-        this.ghostTop = top * 40;
-        this.ghostLeft = left * 40;
+        } else {
+            const { nextMovePos, direction } = this.movement(
+                this.pos,
+                this.dir,
+                objectExist,
+                pacman,
+                ghosts
+            );
 
-        return { nextMovePos, direction };
+            this.setDivPosition(nextMovePos);
+            return { nextMovePos, direction };
+        }
       }
     
     setNewPos(nextMovePos, direction) {

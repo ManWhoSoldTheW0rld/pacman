@@ -1,5 +1,5 @@
-import {LEVEL, OBJECT_TYPE} from './setup.js';
-import {blinky, pinky, inky, clyde} from './ghostmoves.js';
+import {LEVEL, OBJECT_TYPE, GRID_SIZE, CELL_SIZE} from './setup.js';
+import {blinky, pinky, inky, clyde, scared} from './ghostmoves.js';
 
 import GameBoard from './GameBoard.js';
 import Pacman from './Pacman.js';
@@ -70,31 +70,35 @@ const gameLoop = (pacman, ghosts = null) => {
     }
     // 1. Move Pacman
     gameBoard.movePacman(pacman);
+
     // 2. Check Ghost collision on the old positions
     checkCollision(pacman, ghosts);
+
     // 3. Move ghosts
     ghosts.forEach((ghost) => {
         gameBoard.moveGhost(ghost, pacman, ghosts);
-        if (ghost.dir.code == 37  && parseInt(ghost.div.style.left) >= ghost.ghostLeft +4) {
-            ghost.div.style.left = (parseInt(ghost.div.style.left) - 4) + "px";
-        } else if (ghost.dir.code == 38 && parseInt(ghost.div.style.top) >= ghost.ghostTop +4) {
-            ghost.div.style.top = (parseInt(ghost.div.style.top) - 4) + "px";
-        } else if (ghost.dir.code == 39 && parseInt(ghost.div.style.left) <= ghost.ghostLeft - 4) {
-            ghost.div.style.left = (parseInt(ghost.div.style.left) + 4) + "px";
-        } else if (ghost.dir.code == 40 && parseInt(ghost.div.style.top) <= ghost.ghostTop - 4) {
-            ghost.div.style.top = (parseInt(ghost.div.style.top) + 4) + "px";
+        if (ghost.dir.code == 37  && parseInt(ghost.div.style.left) >= ghost.ghostLeft + CELL_SIZE / ghost.speed) {
+            ghost.div.style.left = (parseInt(ghost.div.style.left) - CELL_SIZE / ghost.speed) + "px";
+        } else if (ghost.dir.code == 38 && parseInt(ghost.div.style.top) >= ghost.ghostTop + CELL_SIZE / ghost.speed) {
+            ghost.div.style.top = (parseInt(ghost.div.style.top) - CELL_SIZE / ghost.speed) + "px";
+        } else if (ghost.dir.code == 39 && parseInt(ghost.div.style.left) <= ghost.ghostLeft - CELL_SIZE / ghost.speed) {
+            ghost.div.style.left = (parseInt(ghost.div.style.left) + CELL_SIZE / ghost.speed) + "px";
+        } else if (ghost.dir.code == 40 && parseInt(ghost.div.style.top) <= ghost.ghostTop - CELL_SIZE / ghost.speed) {
+            ghost.div.style.top = (parseInt(ghost.div.style.top) + CELL_SIZE / ghost.speed) + "px";
         }
     });
      // 4. Do a new ghost collision check on the new positions
     checkCollision(pacman, ghosts);
 
-    //Check if Packman eats a dot
+    // 5. Check if Packman eats a dot
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
         playAudio(soundDot);
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.DOT]);
         gameBoard.dotCount--;
         score +=10;
     }
+
+    // 6. Check if Packman eats a pill
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.PILL)) {
         playAudio(soundPill);
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PILL]);
@@ -142,14 +146,14 @@ const startGame = () => {
     });
 
     const ghosts = [
-        new Ghost(10, 188, blinky, OBJECT_TYPE.BLINKY),
-        new Ghost(10, 209, pinky, OBJECT_TYPE.PINKY),
-        new Ghost(10, 230, inky, OBJECT_TYPE.INKY),
-        new Ghost(10, 251, clyde, OBJECT_TYPE.CLYDE)
+        new Ghost(4, 188, blinky, OBJECT_TYPE.BLINKY, 0, scared),
+        new Ghost(5, 209, pinky, OBJECT_TYPE.PINKY, GRID_SIZE, scared),
+        new Ghost(4, 230, inky, OBJECT_TYPE.INKY, GRID_SIZE * (GRID_SIZE -1), scared),
+        new Ghost(5, 251, clyde, OBJECT_TYPE.CLYDE, GRID_SIZE * GRID_SIZE, scared)
     ];
 
      // Gameloop
-  timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
+    timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
 }
 
 //Initialize game

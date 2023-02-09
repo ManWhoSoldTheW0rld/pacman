@@ -2,20 +2,28 @@ import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE} from './setup.js';
 
 export function blinky(position, direction, objectExist, pacman, ghosts) {
 
-    let key = "",
+    let key = "ArrowUp",
         nextMovePos = undefined,
         line = 0;
 
     if (objectExist(position, OBJECT_TYPE.GHOSTLAIR)) {
-        key = "ArrowUp";
         nextMovePos = position +  DIRECTIONS[key].movement;
     } else {
         let pacmanColumn  = pacman.pos % GRID_SIZE;
         let pacmanRow = Math.floor(pacman.pos / GRID_SIZE);
 
-        let directions = ["ArrowDown", "ArrowUp", "ArrowRight"];
-        if (direction.code !== 39) {
+        let directions = [];
+        if (direction.code !== DIRECTIONS.ArrowRight.code) {
             directions.push("ArrowLeft");
+        }
+        if (direction.code !== DIRECTIONS.ArrowLeft.code) {
+            directions.push("ArrowRight");
+        }
+        if (direction.code !== DIRECTIONS.ArrowUp.code) {
+            directions.push("ArrowDown");
+        }
+        if (direction.code !== DIRECTIONS.ArrowDown.code) {
+            directions.push("ArrowUp");
         }
 
          directions.forEach(dir => {
@@ -95,6 +103,8 @@ export function clyde(position, direction, objectExist, pacman, ghosts) {
     return blinky(position, direction, objectExist, pacmanAhead, ghosts)
 }
 
-export function scared(position, direction, objectExist, pacman) {
+export function scared(position, direction, objectExist, targetPosition) {
 
+    let target = {pos : targetPosition}
+    return blinky(position, direction, objectExist, target, []);
 }
