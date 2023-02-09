@@ -1,22 +1,6 @@
-import {OBJECT_TYPE, DIRECTIONS} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE} from './setup.js';
 
-export function randomMovement(postion, direction, objectExist) {
-    let dir = direction;
-    let nextMovePos = postion + dir.movement;
-    const keys = Object.keys(DIRECTIONS);
-    while (
-        objectExist(nextMovePos, OBJECT_TYPE.WALL) ||
-        //todo add this thacking
-        objectExist(nextMovePos, OBJECT_TYPE.GHOST)) {
-            const key = keys[Math.floor(Math.random() * keys.length)];
-            dir = DIRECTIONS[key];
-            nextMovePos = postion + dir.movement;
-    }
-
-     return {nextMovePos, direction : dir};
-}
-
-export function blinky(position, direction, objectExist, pacman) {
+export function blinky(position, direction, objectExist, pacman, ghosts) {
 
     let key = "",
         nextMovePos = undefined,
@@ -26,15 +10,23 @@ export function blinky(position, direction, objectExist, pacman) {
         key = "ArrowUp";
         nextMovePos = position +  DIRECTIONS[key].movement;
     } else {
-        let pacmanColumn  = pacman.pos % 20;
-        let pacmanRow = Math.floor(pacman.pos / 20);
-    
-        ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].forEach(dir => {
+        let pacmanColumn  = pacman.pos % GRID_SIZE;
+        let pacmanRow = Math.floor(pacman.pos / GRID_SIZE);
+
+        let directions = ["ArrowDown", "ArrowUp", "ArrowRight"];
+        if (direction.code !== 39) {
+            directions.push("ArrowLeft");
+        }
+
+         directions.forEach(dir => {
             let dirNextMovePos = position +  DIRECTIONS[dir].movement;
-    
-            if (!(objectExist(dirNextMovePos, OBJECT_TYPE.WALL) || objectExist(dirNextMovePos, OBJECT_TYPE.GHOSTLAIR))) {  
-                let ghostColumn = dirNextMovePos % 20;
-                let ghostRow = Math.floor(dirNextMovePos / 20);
+
+            let isAnotherGhostPos = false;
+            //todo other ghost position check
+      
+            if ((!(objectExist(dirNextMovePos, OBJECT_TYPE.WALL) || objectExist(dirNextMovePos, OBJECT_TYPE.GHOSTLAIR)))&& (!isAnotherGhostPos)) {
+                let ghostColumn = dirNextMovePos % GRID_SIZE;
+                let ghostRow = Math.floor(dirNextMovePos / GRID_SIZE);
                 let dirLine = Math.sqrt(Math.pow(Math.abs(ghostColumn - pacmanColumn),2) + Math.pow(Math.abs(ghostRow - pacmanRow),2));
     
                 if (line == 0 || dirLine < line) {
@@ -49,17 +41,60 @@ export function blinky(position, direction, objectExist, pacman) {
     return {nextMovePos, direction : DIRECTIONS[key]};
 }
 
-export function pinky(position, direction, objectExist, pacman) {
+export function pinky(position, direction, objectExist, pacman, ghosts) {
 
     let pacmanAhead = JSON.parse(JSON.stringify(pacman));
 
     //todo range check
     if (pacman.dir !== null) {
-        let newPos = 3 * (pacman.dir.movement);
-        if (newPos < 20* 20) {
-            pacmanAhead.pos = 3 * (pacman.dir.movement);
+        let newPos = pacmanAhead.pos + 4 * (pacman.dir.movement);
+        if (newPos < GRID_SIZE * GRID_SIZE) {
+            pacmanAhead.pos = newPos;
+        }
+        if (direction.code === 40) {
+            pacmanAhead.pos = newPos - 1;
         }
     }
 
-    return blinky(position, direction, objectExist, pacmanAhead)
+    return blinky(position, direction, objectExist, pacmanAhead, ghosts)
+}
+
+export function inky(position, direction, objectExist, pacman, ghosts) {
+    //temporary logic
+    let pacmanAhead = JSON.parse(JSON.stringify(pacman));
+
+    //todo range check
+    if (pacman.dir !== null) {
+        let newPos = pacmanAhead.pos + 2;
+        if (newPos > 0 && newPos < GRID_SIZE * GRID_SIZE) {
+            pacmanAhead.pos = newPos;
+        }
+        if (direction.code === 40) {
+            pacmanAhead.pos = newPos - 1;
+        }
+    }
+
+    return blinky(position, direction, objectExist, pacmanAhead, ghosts)
+}
+
+export function clyde(position, direction, objectExist, pacman, ghosts) {
+    //temporary logic
+    let pacmanAhead = JSON.parse(JSON.stringify(pacman));
+
+    //todo range check
+    if (pacman.dir !== null) {
+        let newPos = pacmanAhead.pos - 4 * (pacman.dir.movement);
+        if (newPos > 0 && newPos < GRID_SIZE * GRID_SIZE) {
+            pacmanAhead.pos = newPos;
+        }
+        if (direction.code === 40) {
+            pacmanAhead.pos = newPos + 1;
+        }
+    }
+
+    return blinky(position, direction, objectExist, pacmanAhead, ghosts)
+}
+
+export function scared(position, direction, objectExist, pacman) {
+
 }

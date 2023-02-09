@@ -1,5 +1,5 @@
 import {LEVEL, OBJECT_TYPE} from './setup.js';
-import { randomMovement, blinky, pinky } from './ghostmoves.js';
+import {blinky, pinky, inky, clyde} from './ghostmoves.js';
 
 import GameBoard from './GameBoard.js';
 import Pacman from './Pacman.js';
@@ -74,7 +74,7 @@ const gameLoop = (pacman, ghosts = null) => {
     checkCollision(pacman, ghosts);
     // 3. Move ghosts
     ghosts.forEach((ghost) => {
-        gameBoard.moveGhost(ghost, pacman);
+        gameBoard.moveGhost(ghost, pacman, ghosts);
         if (ghost.dir.code == 37  && parseInt(ghost.div.style.left) >= ghost.ghostLeft +4) {
             ghost.div.style.left = (parseInt(ghost.div.style.left) - 4) + "px";
         } else if (ghost.dir.code == 38 && parseInt(ghost.div.style.top) >= ghost.ghostTop +4) {
@@ -144,8 +144,8 @@ const startGame = () => {
     const ghosts = [
         new Ghost(10, 188, blinky, OBJECT_TYPE.BLINKY),
         new Ghost(10, 209, pinky, OBJECT_TYPE.PINKY),
-        new Ghost(10, 230, randomMovement, OBJECT_TYPE.INKY),
-        new Ghost(10, 251, randomMovement, OBJECT_TYPE.CLYDE)
+        new Ghost(10, 230, inky, OBJECT_TYPE.INKY),
+        new Ghost(10, 251, clyde, OBJECT_TYPE.CLYDE)
     ];
 
      // Gameloop

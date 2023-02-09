@@ -76,11 +76,12 @@ class GameBoard {
         this.grid[pos].style.transform = `rotate(${deg}deg)`;
     }
 
-    moveGhost(character, pacman) {
+    moveGhost(character, pacman, ghosts) {
         if (character.shouldMove()) {
             const { nextMovePos, direction} = character.getNextMove(
                 this.objectExist, 
-                pacman
+                pacman,
+                ghosts
             );
             //todo add moving logic here
             character.setNewPos(nextMovePos, direction);
