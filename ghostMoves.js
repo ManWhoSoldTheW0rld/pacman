@@ -3,7 +3,7 @@ import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, GRID_LENGHT} from './setup.js';
 export function blinky(position, direction, objectExist, pacman, ghosts) {
 
     let key = "ArrowUp",
-        nextMovePos = 0,
+        nextMovePos,
         nextDirection,
         line = 0;
 
@@ -62,9 +62,9 @@ export function blinky(position, direction, objectExist, pacman, ghosts) {
     }
 
     
-    // if (nextMovePos == undefined) {
-    //     debugger;
-    // }
+    if (nextMovePos == undefined) {
+        debugger;
+    }
 
     nextDirection = DIRECTIONS[key];
 

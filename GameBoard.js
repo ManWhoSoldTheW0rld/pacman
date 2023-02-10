@@ -11,8 +11,21 @@ class GameBoard {
     showGameStatus(gameWin) {
         const div = document.createElement('div');
         div.classList.add('game-status');
-        div.innerHTML = `${gameWin ? "YOU WIN! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
+        div.innerHTML = `${gameWin ? "YOU WON! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
         this.DOMGrid.appendChild(div);
+    }
+
+    showGamePaused(isPaused){
+        if (isPaused){
+            const div = document.createElement('div');
+            div.id = "paused"
+            div.classList.add('game-status');
+            div.innerHTML = `GAME PAUSED! PRESS \"P\" TO RESUME`
+            this.DOMGrid.appendChild(div)
+        } else {
+            let pauseDiv = document.getElementById('paused')
+            pauseDiv.remove(pauseDiv)
+        }
     }
 
     createGrid(level) {
