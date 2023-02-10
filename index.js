@@ -1,4 +1,4 @@
-import {LEVEL, OBJECT_TYPE, GRID_SIZE, CELL_SIZE} from './setup.js';
+import {LEVEL, OBJECT_TYPE, GRID_SIZE, GRID_LENGHT, CELL_SIZE} from './setup.js';
 import {blinky, pinky, inky, clyde, scared} from './ghostmoves.js';
 
 import GameBoard from './GameBoard.js';
@@ -107,6 +107,11 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     // 3. Move ghosts
     ghosts.forEach((ghost) => {
         gameBoard.moveGhost(ghost, pacman, ghosts);
+
+        if (ghost.pos == 239 || ghost.pos == 220) {
+            ghost.setToPosition(ghost.pos)
+        }
+
         if (ghost.dir.code == 37  && parseInt(ghost.div.style.left) >= ghost.ghostLeft + CELL_SIZE / ghost.speed) {
             ghost.div.style.left = (parseInt(ghost.div.style.left) - CELL_SIZE / ghost.speed) + "px";
         } else if (ghost.dir.code == 38 && parseInt(ghost.div.style.top) >= ghost.ghostTop + CELL_SIZE / ghost.speed) {
@@ -189,9 +194,9 @@ const startGame = () => {
 
     const ghosts = [
         new Ghost(4, 188, blinky, OBJECT_TYPE.BLINKY, 0, scared),
-        new Ghost(5, 209, pinky, OBJECT_TYPE.PINKY, GRID_SIZE, scared),
-        new Ghost(4, 230, inky, OBJECT_TYPE.INKY, GRID_SIZE * (GRID_SIZE -1), scared),
-        new Ghost(5, 251, clyde, OBJECT_TYPE.CLYDE, GRID_SIZE * GRID_SIZE, scared)
+        new Ghost(5, 209, pinky, OBJECT_TYPE.PINKY, GRID_SIZE -1, scared),
+        new Ghost(4, 230, inky, OBJECT_TYPE.INKY, GRID_SIZE * (GRID_LENGHT -1), scared),
+        new Ghost(5, 251, clyde, OBJECT_TYPE.CLYDE, GRID_SIZE * GRID_LENGHT -1, scared)
     ];
 
     // Gameloop

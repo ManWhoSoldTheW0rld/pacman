@@ -1,13 +1,20 @@
-import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, GRID_LENGHT} from './setup.js';
 
 export function blinky(position, direction, objectExist, pacman, ghosts) {
 
     let key = "ArrowUp",
-        nextMovePos = undefined,
+        nextMovePos = 0,
+        nextDirection,
         line = 0;
 
     if (objectExist(position, OBJECT_TYPE.GHOSTLAIR)) {
         nextMovePos = position +  DIRECTIONS[key].movement;
+    } else if (position == 220) {
+        nextMovePos = 239;
+        nextDirection = direction
+    } else if (position == 239) {
+        nextMovePos = 220;
+        nextDirection = direction;   
     } else {
         let pacmanColumn  = pacman.pos % GRID_SIZE;
         let pacmanRow = Math.floor(pacman.pos / GRID_SIZE);
@@ -29,9 +36,17 @@ export function blinky(position, direction, objectExist, pacman, ghosts) {
          directions.forEach(dir => {
             let dirNextMovePos = position +  DIRECTIONS[dir].movement;
 
+            if (dirNextMovePos < 0) {
+                dirNextMovePos = 0;
+            }
+
+            if (dirNextMovePos >= GRID_SIZE * GRID_LENGHT) {
+                dirNextMovePos = GRID_SIZE * GRID_LENGHT -1;
+            }
+
             let isAnotherGhostPos = false;
             //todo other ghost position check
-      
+
             if ((!(objectExist(dirNextMovePos, OBJECT_TYPE.WALL) || objectExist(dirNextMovePos, OBJECT_TYPE.GHOSTLAIR)))&& (!isAnotherGhostPos)) {
                 let ghostColumn = dirNextMovePos % GRID_SIZE;
                 let ghostRow = Math.floor(dirNextMovePos / GRID_SIZE);
@@ -46,7 +61,14 @@ export function blinky(position, direction, objectExist, pacman, ghosts) {
         });
     }
 
-    return {nextMovePos, direction : DIRECTIONS[key]};
+    
+    // if (nextMovePos == undefined) {
+    //     debugger;
+    // }
+
+    nextDirection = DIRECTIONS[key];
+
+    return {nextMovePos, direction : nextDirection};
 }
 
 export function pinky(position, direction, objectExist, pacman, ghosts) {
@@ -74,7 +96,7 @@ export function inky(position, direction, objectExist, pacman, ghosts) {
     //todo range check
     if (pacman.dir !== null) {
         let newPos = pacmanAhead.pos + 2;
-        if (newPos > 0 && newPos < GRID_SIZE * GRID_SIZE) {
+        if (newPos >= 0 && newPos < GRID_SIZE * GRID_LENGHT) {
             pacmanAhead.pos = newPos;
         }
         if (direction.code === 40) {
@@ -92,7 +114,7 @@ export function clyde(position, direction, objectExist, pacman, ghosts) {
     //todo range check
     if (pacman.dir !== null) {
         let newPos = pacmanAhead.pos - 4 * (pacman.dir.movement);
-        if (newPos > 0 && newPos < GRID_SIZE * GRID_SIZE) {
+        if (newPos >= 0 && newPos < GRID_SIZE * GRID_LENGHT) {
             pacmanAhead.pos = newPos;
         }
         if (direction.code === 40) {

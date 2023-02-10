@@ -51,7 +51,6 @@ class Ghost {
     }
 
     getNextMove(objectExist, pacman, ghosts) {
-    
         if (this.isScared) {
             const { nextMovePos, direction } = this.scaryFunc(
                 this.pos,
