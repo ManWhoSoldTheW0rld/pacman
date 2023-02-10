@@ -25,10 +25,11 @@ const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
 
 //Initial Setup
 let score = 0;
-let timer = null;
 let gameWin = false;
 let powerPillActive = false;
 let powerPillTimer = null;
+let previousTimeStamp;
+let isGameOver = false;
 
 //Audio
 function playAudio(audio) {
@@ -37,13 +38,13 @@ function playAudio(audio) {
 }
 
 const gameOver = (pacman) => {
-    playAudio(soundGameOver)
+    isGameOver = true;
+    playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
 
     gameBoard.showGameStatus(gameWin);
-    clearInterval(timer);
     startButton.classList.remove('hide');
 }
 
@@ -64,10 +65,24 @@ const checkCollision = (pacman, ghosts) => {
     }
 }
 
-const gameLoop = (pacman, ghosts = null) => {
-    if (pacman.isPause) {
+const gameLoop = (timestamp, pacman, ghosts = null) => {
+
+    // Check if game over
+    if (isGameOver) {
         return;
     }
+
+    // Check that all characters moving with global speed and not moving while pause
+    if ((timestamp < previousTimeStamp + GLOBAL_SPEED) || (pacman.isPause)) {
+        window.requestAnimationFrame(function(timestamp) {
+            gameLoop(timestamp, pacman, ghosts);
+        });
+
+        return;
+    }
+ 
+    previousTimeStamp = timestamp;
+
     // 1. Move Pacman
     gameBoard.movePacman(pacman);
 
@@ -126,6 +141,10 @@ const gameLoop = (pacman, ghosts = null) => {
 
     //Show the score
     scoreTable.innerHTML = score;
+
+    window.requestAnimationFrame(function(timestamp) {
+        gameLoop(timestamp, pacman, ghosts);
+    });
 }
 
 const startGame = () => {
@@ -133,6 +152,7 @@ const startGame = () => {
     gameWin = false;
     powerPillActive = false;
     score = 0;
+    isGameOver = false;
 
     startButton.classList.add("hide");
     gameBoard.createGrid(LEVEL);
@@ -152,8 +172,8 @@ const startGame = () => {
         new Ghost(5, 251, clyde, OBJECT_TYPE.CLYDE, GRID_SIZE * GRID_SIZE, scared)
     ];
 
-     // Gameloop
-    timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
+    // Gameloop
+    gameLoop(0, pacman, ghosts);   
 }
 
 //Initialize game
