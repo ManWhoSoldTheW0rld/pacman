@@ -15,7 +15,8 @@ import Ghost from './Ghost.js';
 //DOM Elements
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
-const startButton = document.querySelector('#start-button');
+const livesTable = document.getElementsByClassName('lives');
+const instructions = document.getElementsByClassName('instructions');
 
 
 //Game Const
@@ -30,6 +31,7 @@ let powerPillActive = false;
 let powerPillTimer = null;
 let previousTimeStamp;
 let isGameOver = false;
+let isGameStarted = false
 
 //Audio
 function playAudio(audio) {
@@ -44,8 +46,21 @@ const gameOver = (pacman) => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
 
-    gameBoard.showGameStatus(gameWin);
-    startButton.classList.remove('hide');
+    livesTable[0].parentNode.removeChild(livesTable[0])
+
+
+    if (gameWin == false && livesTable.length > 0){
+        if (livesTable.length == 0){
+            gameBoard.showGameStatus(gameWin)
+        } else {
+            setTimeout(() => {startGame()}, 3000)
+        }
+    } else {
+        gameBoard.showGameStatus(gameWin)
+    }
+
+    isGameStarted = false
+    clearInterval(timer);
 }
 
 const checkCollision = (pacman, ghosts) => {
@@ -154,7 +169,14 @@ const startGame = () => {
     score = 0;
     isGameOver = false;
 
-    startButton.classList.add("hide");
+    if (livesTable.length == 0) {
+        gameBoard.createLivesTable()
+    }
+
+    instructions[0].classList.add("hide")
+    instructions[1].classList.add("hide")
+    document.getElementById('lives').classList.remove('hide')
+    
     gameBoard.createGrid(LEVEL);
     gameBoard.createMaze(LEVEL);
 
@@ -177,4 +199,9 @@ const startGame = () => {
 }
 
 //Initialize game
-startButton.addEventListener('click', startGame);
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !isGameStarted){
+        isGameStarted = true;
+        startGame();
+    }
+})

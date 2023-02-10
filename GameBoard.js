@@ -11,7 +11,7 @@ class GameBoard {
     showGameStatus(gameWin) {
         const div = document.createElement('div');
         div.classList.add('game-status');
-        div.innerHTML = `${gameWin ? "WIN!" : "GAME OVER!"}`;
+        div.innerHTML = `${gameWin ? "YOU WIN! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
         this.DOMGrid.appendChild(div);
     }
 
@@ -57,6 +57,16 @@ class GameBoard {
             i++
         })
 
+    }
+
+    createLivesTable(){
+        let lives = document.getElementById('lives');
+        for (let i = 1; i < 4; i++){
+            let life = document.createElement('div');
+            life.classList.add('lives')
+            life.innerHTML = `<img src="./media/pacmanlives.png" width="50px">`
+            lives.appendChild(life)
+        }
     }
 
     addObject(pos, classes) {
@@ -111,7 +121,8 @@ class GameBoard {
     static createGameBoard(DOMGrid, level) {
         const board = new this(DOMGrid);
         board.createGrid(level);
-        board.createMaze(level)
+        board.createMaze(level);
+        board.createLivesTable();
         return board;
     }
 }
