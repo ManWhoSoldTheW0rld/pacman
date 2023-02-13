@@ -112,4 +112,7 @@ export const LEVEL = [
   14, 10, 10, 10, 10, 10, 10, 10, 10, 15, 14, 10, 10, 10, 10, 10, 10, 10, 10, 15,
 ];
 
+export const RIGHT_TUNNEL = 239;
+export const LEFT_TUNNEL= 220;
+
 export let LEVELCopy = LEVEL

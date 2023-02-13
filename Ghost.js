@@ -1,53 +1,25 @@
 import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, CELL_SIZE} from './setup.js';
  
-class Ghost {
-    constructor(speed, startPos, movement, name, scaryTarget, scaryFunc) {
-        this.name = name;
+import Character from './Character.js';
+
+class Ghost extends Character {
+    constructor(speed, startPos, name, movement, scaryTarget, scaryFunc) {
+
+        super(speed, startPos, name);
+    
         this.movement = movement;
         this.startPos = startPos;
-        this.pos = startPos;
         this.dir = DIRECTIONS.ArrowRight;
-        this.speed = speed;
-        this.timer = 0;
         this.isScared = false;
-        this.rotation = false;
-        this.ghostTop = 0;
-        this.ghostLeft = 0;
         this.scaryTarget = scaryTarget;
         this.scaryFunc = scaryFunc;
+    }
 
+    getDiv() {
         const div = document.createElement("div");
-        div.classList.add("ghost", name);
+        div.classList.add("ghost", this.name);
         document.getElementById("game").prepend(div);
-
-        this.div  = div;
-        this.setToPosition(startPos);
-    }
-
-    setToPosition(position) {
-       let top = Math.floor(position / GRID_SIZE);
-       let left = position % GRID_SIZE;
-
-       this.setDivPosition(position);
-
-       this.div.style.left =  left * CELL_SIZE + "px";
-       this.div.style.top = top * CELL_SIZE +"px";
-    }
-
-    shouldMove() {
-        if (this.timer === this.speed) {
-          this.timer = 0;
-          return true;
-        }
-        this.timer++;
-    }
-
-    setDivPosition(position) {
-        let top = Math.floor(position / GRID_SIZE);
-        let left = position % GRID_SIZE;
-
-        this.ghostTop = top * CELL_SIZE;
-        this.ghostLeft = left * CELL_SIZE;
+        return div;
     }
 
     getNextMove(objectExist, pacman, ghosts) {
@@ -90,6 +62,5 @@ class Ghost {
         this.isScared = value;
     }
 }
-
 
 export default Ghost;

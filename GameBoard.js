@@ -1,4 +1,3 @@
-import Pacman from './Pacman.js';
 import {GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST} from './setup.js';
 
 class GameBoard {
@@ -113,15 +112,9 @@ class GameBoard {
                 this.objectExist
             )
 
-            const {classesToRemove, classesToAdd} = character.makeMove();
-
             if (character.rotation && nextMovePos !== character.pos) {
-                this.rotateDiv(nextMovePos, character.dir.rotation);
-                this.rotateDiv(character.pos, 0);
+                character.rotate();    
             }
-
-            this.removeObject(character.pos, classesToRemove);
-            this.addObject(nextMovePos, classesToAdd);
 
             character.setNewPos(nextMovePos, direction);
         }

@@ -1,28 +1,21 @@
-import {OBJECT_TYPE, DIRECTIONS} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, CELL_SIZE} from './setup.js';
 
-class Pacman {
+import Character from './Character.js';
+
+class Pacman extends Character {
     constructor(speed, startPos) {
-        this.pos = startPos;
-        this.speed = speed;
-        this.dir = null;
-        this.timer = 0;
+
+        super(speed, startPos, "pacman");
+
         this.powerPill = false;
         this.rotation = true;
-        this.top = 0;
-        this.left = 0;
     }
 
-    shouldMove() {
-        if (!this.dir) {
-            return false;
-        }
-
-        if (this.timer === this.speed) {
-            this.timer = 0;
-            return true;
-        }
-
-        this.timer++;
+    getDiv() {
+        const div = document.createElement("div");
+        div.classList.add(this.name);
+        document.getElementById("game").prepend(div);
+        return div;
     }
 
     getNextMove(objectExist) {
@@ -30,8 +23,13 @@ class Pacman {
         if (objectExist(nextMovePos, OBJECT_TYPE.WALL) 
         || objectExist(nextMovePos, OBJECT_TYPE.GHOSTLAIR)) {
             nextMovePos = this.pos;
+        } else if (nextMovePos == 220) {
+            nextMovePos = 239;
+        } else if (nextMovePos == 239) {
+            nextMovePos = 220;
         }
 
+        this.setDivPosition(nextMovePos);
         return {nextMovePos, direction : this.dir};
     }
 
@@ -40,6 +38,10 @@ class Pacman {
         const classesToAdd = [OBJECT_TYPE.PACMAN];
 
         return {classesToRemove, classesToAdd};
+    }
+
+    rotate() {
+        this.div.style.transform = `rotate(${this.dir.rotation}deg)`;
     }
 
     setNewPos(nextMovePos) {
