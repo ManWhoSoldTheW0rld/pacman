@@ -6,6 +6,7 @@ class GameBoard {
         this.dotCount = 0;
         this.grid = [];
         this.DOMGrid = DOMGrid;
+        this.pauseDiv = document.getElementById('pause');
     }
 
     showGameStatus(gameWin) {
@@ -17,14 +18,9 @@ class GameBoard {
 
     showGamePaused(isPaused){
         if (isPaused){
-            const div = document.createElement('div');
-            div.id = "paused"
-            div.classList.add('game-status');
-            div.innerHTML = `GAME PAUSED! PRESS \"P\" TO RESUME`
-            this.DOMGrid.appendChild(div)
+            this.pauseDiv.classList.remove('hide');
         } else {
-            let pauseDiv = document.getElementById('paused')
-            pauseDiv.remove(pauseDiv)
+            this.pauseDiv.classList.add('hide')
         }
     }
 

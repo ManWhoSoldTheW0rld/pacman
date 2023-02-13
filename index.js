@@ -7,15 +7,16 @@ import Ghost from './Ghost.js';
 
 //Sounds
  const soundDot = './sounds/munch.wav';
- const  soundPill = './sounds/pill.wav';
- const  soundGameStart = './sounds/game_start.wav';
- const  soundGameOver = './sounds/death.wav';
- const  soundGhost = './sounds/eat_ghost.wav';
+ const soundPill = './sounds/pill.wav';
+ const soundGameStart = './sounds/game_start.wav';
+ const soundGameOver = './sounds/death.wav';
+ const soundGhost = './sounds/eat_ghost.wav';
 
 //DOM Elements
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
 const livesTable = document.getElementsByClassName('lives');
+const timeTable = document.querySelector('#time');
 const instructions = document.getElementsByClassName('instructions');
 
 
@@ -26,22 +27,27 @@ const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
 
 //Initial Setup
 let score = 0;
+let previousScore = 0;
 let gameWin = false;
 let powerPillActive = false;
 let powerPillTimer = null;
 let previousTimeStamp;
 let isGameOver = false;
-let isGameStarted = false
+let isGameStarted = false;
+let isGamePaused = false;
+let time = 600;
 
 //Audio
-function playAudio(audio) {
-    const soundEffect = new Audio(audio);
-    soundEffect.play();
-}
+// function playAudio(audio) {
+//     const soundEffect = new Audio(audio);
+//     soundEffect.play();
+// }
 
 const gameOver = (pacman) => {
+    previousScore = score
+
     isGameOver = true;
-    playAudio(soundGameOver);
+    // playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
@@ -68,7 +74,7 @@ const checkCollision = (pacman, ghosts) => {
 
     if (collidedGhost) {
         if (pacman.powerPill) {
-            playAudio(soundGhost);
+            // playAudio(soundGhost);
             collidedGhost.setToPosition(collidedGhost.startPos);
             collidedGhost.pos = collidedGhost.startPos;
             score += 100;
@@ -87,8 +93,11 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         return;
     }
 
+    // Check if game is paused
+    gameBoard.showGamePaused(isGamePaused)
+
     // Check that all characters moving with global speed and not moving while pause
-    if ((timestamp < previousTimeStamp + GLOBAL_SPEED) || (pacman.isPause)) {
+    if ((timestamp < previousTimeStamp + GLOBAL_SPEED) || isGamePaused) {
         window.requestAnimationFrame(function(timestamp) {
             gameLoop(timestamp, pacman, ghosts);
         });
@@ -127,15 +136,17 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
     // 5. Check if Packman eats a dot
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
-        playAudio(soundDot);
+        // playAudio(soundDot);
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.DOT]);
+        console.log(pacman.pos)
+        
         gameBoard.dotCount--;
         score +=10;
     }
 
     // 6. Check if Packman eats a pill
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.PILL)) {
-        playAudio(soundPill);
+        // playAudio(soundPill);
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PILL]);
 
         pacman.powerPill = true;
@@ -162,16 +173,22 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     //Show the score
     scoreTable.innerHTML = score;
 
+    // Update countdown time
+    timeTable.innerHTML = Math.round(time--/10)
+
     window.requestAnimationFrame(function(timestamp) {
         gameLoop(timestamp, pacman, ghosts);
     });
 }
 
 const startGame = () => {
-    playAudio(soundGameStart);
+    // playAudio(soundGameStart);
     gameWin = false;
     powerPillActive = false;
-    score = 0;
+    if (previousScore != 0){
+        score = previousScore
+    }
+    // score = 0;
     isGameOver = false;
 
     if (livesTable.length == 0) {
@@ -208,5 +225,11 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !isGameStarted){
         isGameStarted = true;
         startGame();
+    }
+
+    if (e.key === 'p' && isGameStarted && !isGamePaused){
+        isGamePaused = true
+    } else if (e.key === 'p' && isGameStarted && isGamePaused){
+        isGamePaused = false
     }
 })
