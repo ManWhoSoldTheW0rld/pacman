@@ -1,4 +1,4 @@
-import {GRID_SIZE, CELL_SIZE, RIGHT_TUNNEL, LEFT_TUNNEL} from './setup.js';
+import {GRID_SIZE, CELL_SIZE, RIGHT_TUNNEL, LEFT_TUNNEL, DIRECTIONS} from './setup.js';
  
 class Character {
 
@@ -11,6 +11,7 @@ class Character {
         this.timer = 0;
         this.top = 0;
         this.left = 0;
+        this.isStepDone = true;
 
         this.div  = this.getDiv();
         this.setToPosition(startPos);
@@ -51,20 +52,36 @@ class Character {
          this.left = left * CELL_SIZE;
     }
 
-    moveDiv() {
+    moveDiv(dir) {
         if (this.pos == RIGHT_TUNNEL || this.pos == LEFT_TUNNEL) {
             this.setToPosition(this.pos)
         }
 
-        if (this.dir !== null) {
-            if (this.dir.code == 37  && parseInt(this.div.style.left) >= this.left + CELL_SIZE / this.speed) {
-                this.div.style.left = (parseInt(this.div.style.left) - CELL_SIZE / this.speed) + "px";
-            } else if (this.dir.code == 38 && parseInt(this.div.style.top) >= this.top + CELL_SIZE / this.speed) {
-                this.div.style.top = (parseInt(this.div.style.top) - CELL_SIZE / this.speed) + "px";
-            } else if (this.dir.code == 39 && parseInt(this.div.style.left) <= this.left - CELL_SIZE / this.speed) {
-                this.div.style.left = (parseInt(this.div.style.left) + CELL_SIZE / this.speed) + "px";
-            } else if (this.dir.code == 40 && parseInt(this.div.style.top) <= this.top - CELL_SIZE / this.speed) {
-                this.div.style.top = (parseInt(this.div.style.top) + CELL_SIZE / this.speed) + "px";
+        if (dir !== null) {
+            if (dir.code == DIRECTIONS.ArrowLeft.code) {
+                let newLeft = parseInt(this.div.style.left) - CELL_SIZE / this.speed; 
+                if (newLeft >= this.left) {
+                    this.div.style.left = newLeft + "px";
+                    this.isStepDone = (newLeft === this.left);
+                }
+            } else if (dir.code == DIRECTIONS.ArrowUp.code) {
+                let newTop = parseInt(this.div.style.top) - CELL_SIZE / this.speed;
+                if (newTop >= this.top) {
+                    this.div.style.top = newTop + "px";
+                    this.isStepDone = newTop === this.top;
+                }
+            } else if (dir.code == DIRECTIONS.ArrowRight.code) {
+                let newLeft = parseInt(this.div.style.left) +  CELL_SIZE / this.speed; 
+                if (newLeft <= this.left) {
+                    this.div.style.left = newLeft + "px";
+                    this.isStepDone = (newLeft === this.left);
+                }
+            } else if (dir.code == DIRECTIONS.ArrowDown.code) {
+                let newTop = parseInt(this.div.style.top) + CELL_SIZE / this.speed;
+                if (newTop <= this.top) {
+                    this.div.style.top = newTop + "px";
+                    this.isStepDone = (newTop === this.top);
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, CELL_SIZE} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS, RIGHT_TUNNEL, LEFT_TUNNEL, CELL_SIZE} from './setup.js';
 
 import Character from './Character.js';
 
@@ -9,6 +9,7 @@ class Pacman extends Character {
 
         this.powerPill = false;
         this.rotation = true;
+        this.prevDir = null;
     }
 
     getDiv() {
@@ -23,21 +24,14 @@ class Pacman extends Character {
         if (objectExist(nextMovePos, OBJECT_TYPE.WALL) 
         || objectExist(nextMovePos, OBJECT_TYPE.GHOSTLAIR)) {
             nextMovePos = this.pos;
-        } else if (nextMovePos == 220) {
-            nextMovePos = 239;
-        } else if (nextMovePos == 239) {
-            nextMovePos = 220;
+        } else if (nextMovePos == LEFT_TUNNEL) {
+            nextMovePos = RIGHT_TUNNEL;
+        } else if (nextMovePos == RIGHT_TUNNEL) {
+            nextMovePos = LEFT_TUNNEL;
         }
 
         this.setDivPosition(nextMovePos);
         return {nextMovePos, direction : this.dir};
-    }
-
-    makeMove() {
-        const classesToRemove = [OBJECT_TYPE.PACMAN];
-        const classesToAdd = [OBJECT_TYPE.PACMAN];
-
-        return {classesToRemove, classesToAdd};
     }
 
     rotate() {
@@ -46,6 +40,14 @@ class Pacman extends Character {
 
     setNewPos(nextMovePos) {
         this.pos = nextMovePos;
+    }
+
+    moveDiv() {
+        if (this.isStepDone || (this.prevDir == null)) {
+            this.prevDir = this.dir;
+        }
+
+        super.moveDiv(this.prevDir);
     }
 
     handleKeyInput = (e, objectExist) => {
@@ -59,6 +61,7 @@ class Pacman extends Character {
     
         const nextMovePos = this.pos + dir.movement;
         if (objectExist(nextMovePos, OBJECT_TYPE.WALL)) return;
+        this.prevDir = this.dir;
         this.dir = dir;
     };
 }

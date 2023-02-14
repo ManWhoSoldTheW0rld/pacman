@@ -1,4 +1,4 @@
-import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, CELL_SIZE} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS} from './setup.js';
  
 import Character from './Character.js';
 
@@ -60,6 +60,10 @@ class Ghost extends Character {
             this.div.classList.remove(OBJECT_TYPE.SCARED)
         }
         this.isScared = value;
+    }
+
+    moveDiv() {
+        super.moveDiv(this.dir);
     }
 }
 

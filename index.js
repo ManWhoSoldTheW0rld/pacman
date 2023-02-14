@@ -80,7 +80,7 @@ const checkCollision = (pacman, ghosts) => {
     const collidedGhost = ghosts.find((ghost) => pacman.pos === ghost.pos);
 
     if (collidedGhost) {
-        if (pacman.powerPill) {
+        if (pacman.powerPill && collidedGhost.isScared) {
             // playAudio(soundGhost);
             collidedGhost.setToPosition(collidedGhost.startPos);
             collidedGhost.pos = collidedGhost.startPos;
