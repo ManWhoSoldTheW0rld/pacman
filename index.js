@@ -34,7 +34,11 @@ let previousTimeStamp;
 let isGameOver = false;
 let isGameStarted = false;
 let isGamePaused = false;
+let isComingFromPause = false;
+let isPillActive = false;
 let time = 600;
+let powerPillTime = 0;
+let LEVELCopy = [];
 
 //Audio
 // function playAudio(audio) {
@@ -44,7 +48,6 @@ let time = 600;
 
 const gameOver = (pacman) => {
     previousScore = score
-
     isGameOver = true;
     // playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
@@ -53,23 +56,22 @@ const gameOver = (pacman) => {
 
     livesTable[0].parentNode.removeChild(livesTable[0])
 
-
     if (gameWin == false && livesTable.length > 0){
         if (livesTable.length == 0){
             gameBoard.showGameStatus(gameWin)
+            isGameStarted = false;
         } else {
             setTimeout(() => {startGame()}, 3000)
         }
     } else {
         gameBoard.showGameStatus(gameWin)
+        isGameStarted = false;
     }
 
-    isGameStarted = false;
-    //todo error after last life
-    clearInterval(timer);
 }
 
 const checkCollision = (pacman, ghosts) => {
+    let isGhostCollided = false
 
     //todo redo collision
     // console.log("pac", pacman.pos, pacman.left, pacman.top);
@@ -89,9 +91,11 @@ const checkCollision = (pacman, ghosts) => {
         } else {
             gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
             gameBoard.rotateDiv(pacman.pos, 0);
+            isGhostCollided = true
             gameOver(pacman, gameGrid);
         }
     }
+    return isGhostCollided;
 }
 
 const gameLoop = (timestamp, pacman, ghosts = null) => {
@@ -112,6 +116,16 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
         return;
     }
+
+    if (isComingFromPause && isPillActive){
+        pacman.powerPill = true
+        clearTimeout(powerPillTimer);
+        powerPillTimer = setTimeout(
+            () => (pacman.powerPill = false),
+            powerPillTime
+        );
+        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
+    }
  
     previousTimeStamp = timestamp;
 
@@ -120,7 +134,9 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     pacman.moveDiv();
     
     // 2. Check Ghost collision on the old positions
-    checkCollision(pacman, ghosts);
+    if (checkCollision(pacman, ghosts)) {
+        return
+    };
 
     // 3. Move ghosts
     ghosts.forEach((ghost) => {
@@ -129,11 +145,14 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     });
 
      // 4. Do a new ghost collision check on the new positions
-    checkCollision(pacman, ghosts);
+    if (checkCollision(pacman, ghosts)){
+        return
+    };
 
     // 5. Check if Packman eats a dot
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
         // playAudio(soundDot);
+        LEVELCopy[pacman.pos] = 0
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.DOT]);
         
         gameBoard.dotCount--;
@@ -143,26 +162,43 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     // 6. Check if Packman eats a pill
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.PILL)) {
         // playAudio(soundPill);
+        LEVELCopy[pacman.pos] = 0
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PILL]);
 
         pacman.powerPill = true;
+        powerPillTime = 10000;
         score += 50;
 
         clearTimeout(powerPillTimer);
         powerPillTimer = setTimeout(
             () => (pacman.powerPill = false),
             POWER_PILL_TIME
-         );
+        );
+
+        isPillActive = true
+
     }
 
+    if (pacman.powerPill){
+        powerPillTime -= 80;
+    } else {
+        powerPillTime = 0
+    }
+
+    console.log(powerPillTime)
+
     // 7. Change ghost scare mode depending on powerpill
-    if (pacman.powerPill !== powerPillActive) {
+    if (pacman.powerPill !== powerPillActive ) {
         powerPillActive = pacman.powerPill;
-        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)));
+        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
     }
 
     if (gameBoard.dotCount === 0) {
         gameWin = true;
+        gameOver(pacman, ghosts);
+    }
+
+    if (time < 0){
         gameOver(pacman, ghosts);
     }
 
@@ -175,29 +211,40 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     window.requestAnimationFrame(function(timestamp) {
         gameLoop(timestamp, pacman, ghosts);
     });
+
+    isComingFromPause = false
 }
 
 const startGame = () => {
     // playAudio(soundGameStart);
     gameWin = false;
     powerPillActive = false;
+    time = 600;
     if (previousScore != 0){
         score = previousScore
     }
-    // score = 0;
+
+    if (livesTable.length == 0){
+        gameBoard.createLivesTable()
+        score = 0
+        gameBoard.gameWinDiv.classList.add('hide')
+    }
+
     isGameOver = false;
 
-    if (livesTable.length == 0) {
-        gameBoard.createLivesTable()
+    if (livesTable.length == 3){
+        gameBoard.createGrid(LEVEL);
+        gameBoard.createMaze(LEVEL);
+        gameBoard.LEVELCopy = []
+    } else {
+        gameBoard.createGrid(LEVELCopy);
+        gameBoard.createMaze(LEVELCopy);
     }
 
     instructions[0].classList.add("hide")
     instructions[1].classList.add("hide")
     document.getElementById('lives').classList.remove('hide')
     
-    gameBoard.createGrid(LEVEL);
-    gameBoard.createMaze(LEVEL);
-
     const pacman = new Pacman(2, 287);
 
     document.addEventListener('keydown', (e) => {
@@ -219,12 +266,15 @@ const startGame = () => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !isGameStarted){
         isGameStarted = true;
+        LEVELCopy = [...LEVEL]
         startGame();
     }
 
-    if (e.key === 'p' && isGameStarted && !isGamePaused){
+    if ((e.key === 'p' || e.key === 'P') && isGameStarted && !isGamePaused){
         isGamePaused = true
-    } else if (e.key === 'p' && isGameStarted && isGamePaused){
+        isComingFromPause = false
+    } else if ((e.key === 'p' || e.key === 'P') && isGameStarted && isGamePaused){
         isGamePaused = false
+        isComingFromPause = true
     }
 })

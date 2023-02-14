@@ -6,13 +6,12 @@ class GameBoard {
         this.grid = [];
         this.DOMGrid = DOMGrid;
         this.pauseDiv = document.getElementById('pause');
+        this.gameWinDiv = document.getElementById('game_win');
     }
 
     showGameStatus(gameWin) {
-        const div = document.createElement('div');
-        div.classList.add('game-status');
-        div.innerHTML = `${gameWin ? "YOU WON! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
-        this.DOMGrid.appendChild(div);
+        this.gameWinDiv.innerHTML = `${gameWin ? "YOU WON! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
+        this.gameWinDiv.classList.remove('hide')
     }
 
     showGamePaused(isPaused){
