@@ -15,6 +15,9 @@ class Character {
 
         this.div  = this.getDiv();
         this.setToPosition(startPos);
+
+        this.currentLeft = this.left;
+        this.currentTop = this.top;
     }
 
     getDiv() {
@@ -62,24 +65,28 @@ class Character {
                 let newLeft = parseInt(this.div.style.left) - CELL_SIZE / this.speed; 
                 if (newLeft >= this.left) {
                     this.div.style.left = newLeft + "px";
+                    this.currentLeft = newLeft;
                     this.isStepDone = (newLeft === this.left);
                 }
             } else if (dir.code == DIRECTIONS.ArrowUp.code) {
                 let newTop = parseInt(this.div.style.top) - CELL_SIZE / this.speed;
                 if (newTop >= this.top) {
                     this.div.style.top = newTop + "px";
+                    this.currentTop = newTop;
                     this.isStepDone = newTop === this.top;
                 }
             } else if (dir.code == DIRECTIONS.ArrowRight.code) {
                 let newLeft = parseInt(this.div.style.left) +  CELL_SIZE / this.speed; 
                 if (newLeft <= this.left) {
                     this.div.style.left = newLeft + "px";
+                    this.currentLeft = newLeft;
                     this.isStepDone = (newLeft === this.left);
                 }
             } else if (dir.code == DIRECTIONS.ArrowDown.code) {
                 let newTop = parseInt(this.div.style.top) + CELL_SIZE / this.speed;
                 if (newTop <= this.top) {
                     this.div.style.top = newTop + "px";
+                    this.currentTop = newTop;
                     this.isStepDone = (newTop === this.top);
                 }
             }
