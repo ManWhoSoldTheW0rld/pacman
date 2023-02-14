@@ -54,7 +54,9 @@ const gameOver = (pacman) => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
 
-    livesTable[0].parentNode.removeChild(livesTable[0])
+    if (!gameWin){
+        livesTable[0].parentNode.removeChild(livesTable[0])
+    }
 
     if (gameWin == false && livesTable.length > 0){
         if (livesTable.length == 0){
@@ -73,34 +75,25 @@ const gameOver = (pacman) => {
 const checkCollision = (pacman, ghosts) => {
     let isGhostCollided = false
 
-    const collidedGhost = ghosts.find((ghost) => 
-        //check, that ghost and pacman overlap vertically
-        (((ghost.currentTop >= pacman.currentTop) && (ghost.currentTop <= pacman.currentTop + CELL_SIZE) 
-        && (ghost.currentLeft >= pacman.currentLeft) && (ghost.currentLeft <= pacman.currentLeft + CELL_SIZE) 
-        //OR
-        || 
-        //check, that ghost and pacman overlap horisontally
-        (ghost.currentTop + CELL_SIZE >= pacman.currentTop) && (ghost.currentTop + CELL_SIZE  <= pacman.currentTop + CELL_SIZE) 
-        && (ghost.currentLeft + CELL_SIZE >= pacman.currentLeft) && (ghost.currentLeft + CELL_SIZE <= pacman.currentLeft + CELL_SIZE)) 
-        //check, that ghost and pacman are in one vertical or horisontal line 
-        && (ghost.currentLeft == pacman.currentLeft || ghost.currentTop == pacman.currentTop)) 
-    );
+    //todo redo collision
+    // console.log("pac", pacman.pos, pacman.left, pacman.top);
+    // ghosts.forEach((ghost) => {
+    //     console.log("gho", ghost.pos, ghost.left, ghost.top, ghost.name);
+    // });
+
+    const collidedGhost = ghosts.find((ghost) => pacman.pos === ghost.pos);
 
     if (collidedGhost) {
         if (pacman.powerPill && collidedGhost.isScared) {
             // playAudio(soundGhost);
-         
-            collidedGhost.setToPosition(collidedGhost.startPos, true);
-            
+            collidedGhost.setToPosition(collidedGhost.startPos);
             collidedGhost.pos = collidedGhost.startPos;
             collidedGhost.setIsScared(false);
             score += 100;
         } else {
             gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
             gameBoard.rotateDiv(pacman.pos, 0);
-            
-            isGhostCollided = true;
-
+            isGhostCollided = true
             gameOver(pacman, gameGrid);
         }
     }
@@ -126,6 +119,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         return;
     }
 
+    // Returning from a pause having eating a Power Pill
     if (isComingFromPause && isPillActive){
         pacman.powerPill = true
         clearTimeout(powerPillTimer);
@@ -188,6 +182,8 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
     }
 
+    // Updating the Power Pill time if Pac-Man has eating one
+    // or setting the time to 0 if he hasn't
     if (pacman.powerPill){
         powerPillTime -= 80;
     } else {
@@ -195,7 +191,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     }
 
     // 7. Change ghost scare mode depending on powerpill
-    if (pacman.powerPill !== powerPillActive ) {
+    if (pacman.powerPill !== powerPillActive || isPillActive ) {
         powerPillActive = pacman.powerPill;
         ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
     }
@@ -220,38 +216,45 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     });
 
     isComingFromPause = false
+    isPillActive = false
 }
 
 const startGame = () => {
     // playAudio(soundGameStart);
-    gameWin = false;
     powerPillActive = false;
+    gameWin = false;
+    isGameOver = false;
     time = 600;
+
     if (previousScore != 0){
         score = previousScore
     }
 
-    if (livesTable.length == 0){
-        gameBoard.createLivesTable()
-        score = 0
-        gameBoard.gameWinDiv.classList.add('hide')
-    }
-
-    isGameOver = false;
-
-    if (livesTable.length == 3){
-        gameBoard.createGrid(LEVEL);
-        gameBoard.createMaze(LEVEL);
-        gameBoard.LEVELCopy = []
-    } else {
+    if (isGameStarted){
         gameBoard.createGrid(LEVELCopy);
         gameBoard.createMaze(LEVELCopy);
+    } else {
+        if (livesTable.length != 3){
+            if (livesTable.length != 0){
+                gameBoard.deleteLivesTable()
+            }
+            gameBoard.createLivesTable()
+        }
+        gameBoard.createGrid(LEVEL);
+        gameBoard.createMaze(LEVEL);
+
+        gameBoard.LEVELCopy = [];
+
+        instructions[0].classList.add("hide");
+        instructions[1].classList.add("hide");
+
+        gameBoard.gameWinDiv.classList.add('hide');
+
+        score = 0;
+
+        isGameStarted = true
     }
 
-    instructions[0].classList.add("hide")
-    instructions[1].classList.add("hide")
-    document.getElementById('lives').classList.remove('hide')
-    
     const pacman = new Pacman(2, 287);
 
     document.addEventListener('keydown', (e) => {
@@ -272,7 +275,6 @@ const startGame = () => {
 //Initialize game
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !isGameStarted){
-        isGameStarted = true;
         LEVELCopy = [...LEVEL]
         startGame();
     }

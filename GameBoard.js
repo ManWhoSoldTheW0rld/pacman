@@ -71,8 +71,16 @@ class GameBoard {
         for (let i = 1; i < 4; i++){
             let life = document.createElement('div');
             life.classList.add('lives')
+            life.classList.add('life')
             life.innerHTML = `<img src="./media/pacmanlives.png" width="50px">`
             lives.appendChild(life)
+        }
+    }
+
+    deleteLivesTable(){
+        let lives = document.getElementsByClassName('life');
+        for (let i = 0; i <= lives.length; i++){
+            lives[0].parentNode.removeChild(lives[0])
         }
     }
 

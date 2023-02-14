@@ -287,6 +287,10 @@ html, body {
   border-top-left-radius: 5px;
 }
 
+.lair{
+  /* background-color: lightpink; */
+}
+
 .wall_ghostlair_2{
   margin-left: -5px;
   height: 5px;
