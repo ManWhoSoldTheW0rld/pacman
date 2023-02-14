@@ -14,10 +14,7 @@ class Character {
         this.isStepDone = true;
 
         this.div  = this.getDiv();
-        this.setToPosition(startPos);
-
-        this.currentLeft = this.left;
-        this.currentTop = this.top;
+        this.setToPosition(startPos, true);
     }
 
     getDiv() {
@@ -37,7 +34,7 @@ class Character {
         this.timer++;
     }
 
-    setToPosition(position) {
+    setToPosition(position, isStartPosition) {
         let top = Math.floor(position / GRID_SIZE);
         let left = position % GRID_SIZE;
  
@@ -45,6 +42,11 @@ class Character {
  
         this.div.style.left =  left * CELL_SIZE + "px";
         this.div.style.top = top * CELL_SIZE +"px";
+
+        if (isStartPosition) {
+            this.currentLeft = this.left;
+            this.currentTop = this.top;
+        }
     }
  
      setDivPosition(position) {

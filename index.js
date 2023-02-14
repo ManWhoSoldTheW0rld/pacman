@@ -89,14 +89,18 @@ const checkCollision = (pacman, ghosts) => {
     if (collidedGhost) {
         if (pacman.powerPill && collidedGhost.isScared) {
             // playAudio(soundGhost);
-            collidedGhost.setToPosition(collidedGhost.startPos);
+         
+            collidedGhost.setToPosition(collidedGhost.startPos, true);
+            
             collidedGhost.pos = collidedGhost.startPos;
             collidedGhost.setIsScared(false);
             score += 100;
         } else {
             gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
             gameBoard.rotateDiv(pacman.pos, 0);
-            isGhostCollided = true
+            
+            isGhostCollided = true;
+
             gameOver(pacman, gameGrid);
         }
     }
@@ -189,8 +193,6 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     } else {
         powerPillTime = 0
     }
-
-    console.log(powerPillTime)
 
     // 7. Change ghost scare mode depending on powerpill
     if (pacman.powerPill !== powerPillActive ) {
