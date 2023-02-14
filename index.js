@@ -135,7 +135,6 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
         // playAudio(soundDot);
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.DOT]);
-        console.log(pacman.pos)
         
         gameBoard.dotCount--;
         score +=10;

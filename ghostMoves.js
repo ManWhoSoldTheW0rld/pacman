@@ -1,4 +1,4 @@
-import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, GRID_LENGHT} from './setup.js';
+import {OBJECT_TYPE, DIRECTIONS, GRID_SIZE, GRID_LENGHT, LEFT_TUNNEL, RIGHT_TUNNEL} from './setup.js';
 
 export function blinky(position, direction, objectExist, pacman, ghosts) {
 
@@ -9,11 +9,11 @@ export function blinky(position, direction, objectExist, pacman, ghosts) {
 
     if (objectExist(position, OBJECT_TYPE.GHOSTLAIR)) {
         nextMovePos = position +  DIRECTIONS[key].movement;
-    } else if (position == 220) {
-        nextMovePos = 239;
-        nextDirection = direction
-    } else if (position == 239) {
-        nextMovePos = 220;
+    } else if (position == LEFT_TUNNEL && direction == DIRECTIONS.ArrowLeft) {
+        nextMovePos = RIGHT_TUNNEL;
+        nextDirection = direction;
+    } else if (position == RIGHT_TUNNEL && direction == DIRECTIONS.ArrowRight) {
+        nextMovePos = LEFT_TUNNEL;
         nextDirection = direction;   
     } else {
         let pacmanColumn  = pacman.pos % GRID_SIZE;

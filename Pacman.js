@@ -21,16 +21,18 @@ class Pacman extends Character {
 
     getNextMove(objectExist) {
         let nextMovePos = this.pos + this.dir.movement;
-        if (objectExist(nextMovePos, OBJECT_TYPE.WALL) 
+
+        if (this.pos == LEFT_TUNNEL && this.dir == DIRECTIONS.ArrowLeft) {
+            nextMovePos = RIGHT_TUNNEL;
+        } else if (this.pos == RIGHT_TUNNEL && this.dir == DIRECTIONS.ArrowRight) {
+            nextMovePos = LEFT_TUNNEL;
+        } else if (objectExist(nextMovePos, OBJECT_TYPE.WALL) 
         || objectExist(nextMovePos, OBJECT_TYPE.GHOSTLAIR)) {
             nextMovePos = this.pos;
-        } else if (nextMovePos == LEFT_TUNNEL) {
-            nextMovePos = RIGHT_TUNNEL;
-        } else if (nextMovePos == RIGHT_TUNNEL) {
-            nextMovePos = LEFT_TUNNEL;
         }
 
         this.setDivPosition(nextMovePos);
+
         return {nextMovePos, direction : this.dir};
     }
 
@@ -61,7 +63,6 @@ class Pacman extends Character {
     
         const nextMovePos = this.pos + dir.movement;
         if (objectExist(nextMovePos, OBJECT_TYPE.WALL)) return;
-        this.prevDir = this.dir;
         this.dir = dir;
     };
 }
