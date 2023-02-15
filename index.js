@@ -9,8 +9,12 @@ import Ghost from './Ghost.js';
  const soundDot = './sounds/munch.wav';
  const soundPill = './sounds/pill.wav';
  const soundGameStart = './sounds/game_start.wav';
- const soundGameOver = './sounds/death.wav';
+ const soundGameOver = './sounds/gameover.wav';
+ const soundDeath = './sounds/death.wav'
  const soundGhost = './sounds/eat_ghost.wav';
+ const soundPause = './sounds/pause.mp3';
+ const soundWin = './sounds/gamewin.wav';
+
 
 //DOM Elements
 const gameGrid = document.querySelector('#game');
@@ -37,9 +41,11 @@ let isGamePaused = false;
 let isComingFromPause = false;
 let isPillActive = false;
 let isGhostAnimationSet = false;
+let isPauseSoundPlayed = false;
 let time = 600;
 let powerPillTime = 0;
 let LEVELCopy = [];
+let isShowingInstructions = false;
 
 //Audio
 function playAudio(audio) {
@@ -50,7 +56,6 @@ function playAudio(audio) {
 const gameOver = (pacman) => {
     previousScore = score;
     isGameOver = true;
-    playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
@@ -60,14 +65,26 @@ const gameOver = (pacman) => {
         pacman.div.style.animation = "dead 1s linear forwards 1";
     }
 
+    if (livesTable.length == 2){
+        livesTable[0].parentNode.removeChild(livesTable[0])
+        livesTable[0].classList.remove('hide')
+    }
+
     if (gameWin == false && livesTable.length > 0){
+
         if (livesTable.length == 0){
             gameBoard.showGameStatus(gameWin)
             isGameStarted = false;
         } else {
+            playAudio(soundDeath);
             setTimeout(() => {startGame()}, 3000)
         }
     } else {
+        if (gameWin){
+            playAudio(soundWin)
+        } else {
+            playAudio(soundGameOver)
+        }
         gameBoard.showGameStatus(gameWin)
         isGameStarted = false;
     }
@@ -115,8 +132,15 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         return;
     }
 
+    if (isGamePaused && !isPauseSoundPlayed){
+        playAudio(soundPause)
+        isPauseSoundPlayed = true
+    }
+
     // Check if game is paused
-    gameBoard.showGamePaused(isGamePaused)
+    if (!isShowingInstructions){
+        gameBoard.showGamePaused(isGamePaused)
+    }
 
     // Check that all characters moving with global speed and not moving while pause
     if ((timestamp < previousTimeStamp + GLOBAL_SPEED) || isGamePaused) {
@@ -127,16 +151,22 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         return;
     }
 
+    isPauseSoundPlayed = false
+
     // Returning from a pause having eating a Power Pill
-    if (isComingFromPause && isPillActive){
+
+    if (isComingFromPause && powerPillTime != 0){
         pacman.powerPill = true
         clearTimeout(powerPillTimer);
         powerPillTimer = setTimeout(
             () => (pacman.powerPill = false),
             powerPillTime
         );
-        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
+        // ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
+        isComingFromPause = false
     }
+
+
  
     previousTimeStamp = timestamp;
 
@@ -178,6 +208,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
         pacman.powerPill = true;
         powerPillTime = 10000;
+        gameBoard.pillCount--;
         score += 50;
 
         clearTimeout(powerPillTimer);
@@ -221,7 +252,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         });
     }
 
-    if (gameBoard.dotCount === 0) {
+    if (gameBoard.dotCount === 0 && gameBoard.pillCount === 0) {
         gameWin = true;
         gameOver(pacman, ghosts);
     }
@@ -236,8 +267,8 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     // Update countdown time
     let newTime = Math.round(time--/10);
     timeTable.innerHTML = newTime;
-   
-    if (newTime == 5) {
+
+    if (newTime == 10) {
         timeTable.style.animation =  "countdown 1s ease-in-out alternate infinite";
     }
 
@@ -245,8 +276,9 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
         gameLoop(timestamp, pacman, ghosts);
     });
 
-    isComingFromPause = false
+
     isPillActive = false
+
 }
 
 const startGame = () => {
@@ -264,7 +296,7 @@ const startGame = () => {
         gameBoard.createGrid(LEVELCopy);
         gameBoard.createMaze(LEVELCopy);
     } else {
-        if (livesTable.length != 3){
+        if (livesTable.length != 4){
             if (livesTable.length != 0){
                 gameBoard.deleteLivesTable()
             }
@@ -272,11 +304,6 @@ const startGame = () => {
         }
         gameBoard.createGrid(LEVEL);
         gameBoard.createMaze(LEVEL);
-
-        gameBoard.LEVELCopy = [];
-
-        instructions[0].classList.add("hide");
-        instructions[1].classList.add("hide");
 
         gameBoard.gameWinDiv.classList.add('hide');
 
@@ -306,15 +333,47 @@ const startGame = () => {
 //Initialize game
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !isGameStarted){
+        if (isShowingInstructions){
+            isShowingInstructions = false
+            isGamePaused = false
+            instructions[2].classList.add("hide");
+        }
+        
         LEVELCopy = [...LEVEL]
+        instructions[0].classList.add("hide");
+        instructions[1].classList.add("hide");
         startGame();
     }
 
-    if ((e.key === 'p' || e.key === 'P') && isGameStarted && !isGamePaused){
+    if ((e.key === 'p' || e.key === 'P') && isGameStarted && !isGamePaused && !isShowingInstructions){
         isGamePaused = true
         isComingFromPause = false
-    } else if ((e.key === 'p' || e.key === 'P') && isGameStarted && isGamePaused){
+    } else if ((e.key === 'p' || e.key === 'P') && isGameStarted && isGamePaused && !isShowingInstructions){
         isGamePaused = false
+        isComingFromPause = true
+    }
+
+    if ((e.key === 'i' || e.key === 'I') && !isShowingInstructions && !isGameOver && !isGamePaused){
+        if (!isGameStarted){
+            instructions[1].classList.add("hide");
+        }
+        if (!isGamePaused){
+            isGamePaused = true
+            isComingFromPause = false
+        }
+        instructions[0].classList.remove("hide");
+        instructions[2].classList.remove("hide");
+        isShowingInstructions = true;
+    } else if ((e.key === 'i' || e.key === 'I') && isShowingInstructions && !isGameOver){
+        if (!isGameStarted){
+            instructions[1].classList.remove("hide")
+            instructions[2].classList.add("hide");
+        } else {
+            instructions[2].classList.add("hide");
+            instructions[0].classList.add("hide");
+        }
+        isGamePaused = false
+        isShowingInstructions = false
         isComingFromPause = true
     }
 })

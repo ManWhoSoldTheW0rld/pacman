@@ -3,6 +3,7 @@ import {GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST} from './setup.js';
 class GameBoard {
     constructor(DOMGrid) {
         this.dotCount = 0;
+        this.pillCount = 0;
         this.grid = [];
         this.DOMGrid = DOMGrid;
         this.pauseDiv = document.getElementById('pause');
@@ -11,33 +12,36 @@ class GameBoard {
 
     showGameStatus(gameWin) {
         this.gameWinDiv.innerHTML = `${gameWin ? "YOU WON! PRESS \"ENTER\" TO START A NEW GAME!" : "GAME OVER! PRESS \"ENTER\" TO START A NEW GAME!"}`;
-        this.gameWinDiv.classList.remove('hide')
+        this.gameWinDiv.classList.remove('hide');
     }
 
     showGamePaused(isPaused){
         if (isPaused){
             this.pauseDiv.classList.remove('hide');
         } else {
-            this.pauseDiv.classList.add('hide')
+            this.pauseDiv.classList.add('hide');
         }
     }
 
     createGrid(level) {
         this.dotCount = 0;
+        this.pillCount = 0;
         this.grid = [];
         this.DOMGrid.innerHTML = "";
         this.DOMGrid.style.cssText = `grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px);`;
 
         level.forEach((square, i) => {
                 const div = document.createElement('div');
-                div.id = i
+                div.id = i;
                 div.classList.add('square', CLASS_LIST[square]);
                 this.DOMGrid.appendChild(div);
                 this.grid.push(div);
             if (CLASS_LIST[square] === OBJECT_TYPE.DOT) {
                 this.dotCount++;
+            } else if (CLASS_LIST[square] === OBJECT_TYPE.PILL){
+                this.pillCount++;
             }
-            i++
+            i++;
         });
     }
 
@@ -61,8 +65,8 @@ class GameBoard {
                 document.getElementById(i).appendChild(innerDiv);
                 document.getElementById(i).appendChild(innerDiv2);
             }
-            i++
-        })
+            i++;
+        });
 
     }
 
@@ -70,17 +74,23 @@ class GameBoard {
         let lives = document.getElementById('lives');
         for (let i = 1; i < 4; i++){
             let life = document.createElement('div');
-            life.classList.add('lives')
-            life.classList.add('life')
-            life.innerHTML = `<img src="./media/pacmanlives.png" width="50px">`
-            lives.appendChild(life)
+            life.classList.add('lives');
+            life.classList.add('life');
+            life.innerHTML = `<img src="./media/pacmanlives.png" width="50px">`;
+            lives.appendChild(life);
         }
+        let lastLife = document.createElement('div');
+        lastLife.classList.add('lives');
+        lastLife.classList.add('life')
+        lastLife.classList.add('hide');
+        lastLife.innerHTML = `<img src="./media/pacman-last_life.gif" width="50px">`;
+        lives.appendChild(lastLife);
     }
 
     deleteLivesTable(){
         let lives = document.getElementsByClassName('life');
         for (let i = 0; i <= lives.length; i++){
-            lives[0].parentNode.removeChild(lives[0])
+            lives[0].parentNode.removeChild(lives[0]);
         }
     }
 
@@ -117,7 +127,7 @@ class GameBoard {
         if (character.shouldMove()) {
             const { nextMovePos, direction} = character.getNextMove(
                 this.objectExist
-            )
+            );
 
             if (character.rotation && nextMovePos !== character.pos) {
                 character.rotate();    

@@ -39,7 +39,7 @@ html, body {
   color: white;
   font-family: 'emulogicregular';
   font-size: 50px;
-  z-index: 3;
+  z-index: 4;
 }
 
 .text_table {
@@ -74,9 +74,8 @@ html, body {
   text-align: center;
   text-shadow: 3px 3px black;
   color: white;
-  width: 550px;
-  height: 50%px;
-  z-index: 1;
+  width: 760px;
+  z-index: 4;
 }
 
 .instructions-background {
@@ -85,7 +84,7 @@ html, body {
   width: 100%;
   height: 100%;
   opacity: 0.7;
-  z-index: 1
+  z-index: 4;
 }
 
 .lives_table{
@@ -287,10 +286,6 @@ html, body {
   border-top-left-radius: 5px;
 }
 
-.lair{
-  /* background-color: lightpink; */
-}
-
 .wall_ghostlair_2{
   margin-left: -5px;
   height: 5px;
@@ -305,11 +300,24 @@ html, body {
   border-radius: 50%;
 }
 
+.dot-instructions {
+  background: white;
+  border: 7px solid black;
+  border-radius: 50%;
+}
+
 .pill {
   background: white;
   border: 7px solid black;
   border-radius: 50%;
   animation: wobble 1s ease-in-out alternate infinite;
+}
+
+.pill-instructions {
+  /* background: white; */
+  border: 5px solid black;
+  border-radius: 50%;
+  animation: wobble-instructions 1s ease-in-out alternate infinite;
 }
 
 .ghost {
@@ -318,10 +326,9 @@ html, body {
   border: none;
   width: 40px;
   height: 40px;
-  z-index: 2;
-}
-
-.ghost::before {
+  z-index: 3;
+ }
+ .ghost::before {
   content: '';
   display: block;
   position: absolute;
@@ -333,9 +340,8 @@ html, body {
   top: 5px;
   border: 4px solid white;
   animation: final__peeperLeft 1s linear infinite;
-}
-
-.ghost::after {
+ }
+ .ghost::after {
   content: '';
   display: block;
   position: absolute;
@@ -347,6 +353,43 @@ html, body {
   top: 5px;
   border: 4px solid white;
   animation: final__peeperRight 1s linear infinite;
+ }
+
+.ghost-instructions {
+  position: absolute;
+  border-radius: 20px 20px 4px 4px;
+  border: none;
+  width: 20px;
+  height: 20px;
+  z-index: 2;
+}
+
+.ghost-instructions::before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: black;
+  border-radius: 50%;
+  left: 1px;
+  top: 5px;
+  border: 4px solid white;
+  animation: final__peeperLeft-instructions 1s linear infinite;
+}
+
+.ghost-instructions::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: black;
+  border-radius: 50%;
+  right: 1px;
+  top: 5px;
+  border: 4px solid white;
+  animation: final__peeperRight-instructions 1s linear infinite;
 }
 
 .scared {
@@ -384,6 +427,23 @@ html, body {
   100% 100%,
   0 100%);
   animation: dead 1s linear forwards 1;
+}
+
+.flex-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-child{
+  flex: 100% 1 auto;
+  margin-right: 10px;
+  align-content: center;
+}
+
+.instructions-characters{
+  width: 22px;
+  height: 22px;
 }
 
 @keyframes chew {
@@ -439,19 +499,36 @@ html, body {
 
 @keyframes final__peeperLeft {
   0%, 100% {
-    left: 3px;
+  left: 3px;
   }
   50% {
-    left: 6px;
+  left: 6px;
+  }
+ }
+ @keyframes final__peeperRight {
+  0%, 100% {
+  left: 18px;
+  }
+  50% {
+  left: 21px;
+  }
+ }
+
+@keyframes final__peeperLeft-instructions {
+  0%, 100% {
+    left: 0px;
+  }
+  50% {
+    left: 2px;
   }
 }
 
-@keyframes final__peeperRight {
+@keyframes final__peeperRight-instructions {
   0%, 100% {
-    left: 18px;
+    left:10px;
   }
   50% {
-    left: 21px;
+    left: 12px;
   }
 }
 
@@ -463,6 +540,18 @@ html, body {
   }
   100% {
     border: 20px solid black;    
+    background-color: rgb(240, 237, 52);              
+  }
+}
+
+@keyframes wobble-instructions {
+  0% {
+    border: 1px solid black; 
+    background-color: rgb(218, 93, 31);     
+     
+  }
+  100% {
+    border: 10px solid black;    
     background-color: rgb(240, 237, 52);              
   }
 }

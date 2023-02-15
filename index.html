@@ -15,12 +15,66 @@
       <div class="instructions-background instructions"></div>
       <div class="instructions-text instructions">
         WELCOME TO OUR...<br><br>
-        <img src="./media/pacmanlogo.png" width="500px">
-        You can move Pac-Man using the arrows Up, Down, Left and Right.<br><br>
-        You have 3 lives and 60 seconds to eat all the dots and win the game.<br><br>
+        <img src="./media/pacmanlogo.png" width="500px"><br>
+        You can change Pac-Man's direction using the arrows Up, Down, Left and Right.<br><br>
+        You have 3 lives, each of them with 60 seconds.<br><br>
+        If you eat all the dots and flashing pills you win the game.<br><br>
         If you want to pause the game, press "P".<br><br>
+        If you are not familiar with Pac-Man and want to read more instructions, press "I".<br><br>
         Press "Enter" to start the game.<br><br>
         Good luck!
+      </div>
+      <div id="extra-instrunctions" class="instructions-text instructions hide">
+        <div class="flex-container">
+          <div class="flex-child">You are Pac-Man:</div>
+          <div class="flex-child instructions-characters"><div class="pacman instructions-characters"></div></div>
+          <div class="flex-child">and you are hungry!</div>
+        </div>
+        You can change your direction pressing arrow up, down, left and right.<br><br>
+        <div class="flex-container">
+          <div class="flex-child">This is a dot:</div>
+          <div class="flex-child instructions-characters"><div class="dot-instructions instructions-characters"></div></div>
+          <div class="flex-child">This is a flashing pill:</div>
+          <div class="flex-child instructions-characters"><div class="pill-instructions instructions-characters"></div></div>
+        </div>
+        to win the game, eat them all!<br>
+        You have 3 lives and 60 seconds in each of them.
+        If you run out of time, you die.<br><br>
+        <div class="flex-container">
+          <div class="flex-child">that's blinky:</div>
+          <div class="flex-child instructions-characters"><div class="ghost-instructions blinky instructions-characters"></div></div>
+          <div class="flex-child">pinky:</div>
+          <div class="flex-child instructions-characters"><div class="ghost-instructions pinky instructions-characters"></div></div>
+          <div class="flex-child">inky:</div>
+          <div class="flex-child instructions-characters"><div class="ghost-instructions inky instructions-characters"></div></div>
+          <div class="flex-child">and clyde:</div>
+          <div class="flex-child instructions-characters"><div class="ghost-instructions clyde instructions-characters"></div></div>
+        </div>
+        If they catch you, you'll loose a life!
+        <div class="flex-container">
+          <div class="flex-child">They'll be scared for 10 seconds</div>
+          &nbsp(<div class="flex-child instructions-characters">
+            <div class="ghost-instructions scared instructions-characters"></div>
+          </div>
+          <div class="flex-child instructions-characters">
+            <div class="ghost-instructions scared instructions-characters"></div>
+          </div>
+          <div class="flex-child instructions-characters">
+            <div class="ghost-instructions scared instructions-characters"></div>
+          </div>
+          <div class="flex-child instructions-characters">
+            <div class="ghost-instructions scared instructions-characters"></div>
+          </div>)
+        </div>
+        when you eat a flashing pill. If they are scared,
+        you can eat them and get extra points.
+        Be careful: they'll reborn and come after you!<br><br>
+        In the center of the maze, there are two tunnels:
+        one on the left and another on the right. If you go through one
+        of them, you'll be transported to the other.<br><br>
+        You can pause or unpause the game pressing "p".<br><br>
+        To show or hide the instructions, press "i".<br><br>
+        Press "enter" to start the game!
       </div>
       <div id="pause" class="game-status hide">GAME PAUSED! PRESS "P" TO RESUME</div>
       <div id="game_win" class="game-status hide"></div>
