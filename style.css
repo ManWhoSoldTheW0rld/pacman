@@ -103,7 +103,7 @@ html, body {
 }
 
 #time{
-  color: yellow
+  color: yellow;
 }
 
 .hide {
@@ -426,5 +426,15 @@ html, body {
   100% {
     border: 20px solid black;    
     background-color: rgb(240, 237, 52);              
+  }
+}
+
+@keyframes countdown {
+  0% {
+    color: red; 
+     
+  }
+  100% {
+    color: yellow;          
   }
 }

@@ -47,7 +47,7 @@ let LEVELCopy = [];
 // }
 
 const gameOver = (pacman) => {
-    previousScore = score
+    previousScore = score;
     isGameOver = true;
     // playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
@@ -70,30 +70,36 @@ const gameOver = (pacman) => {
         isGameStarted = false;
     }
 
+    timeTable.style.animation =  "";
 }
 
 const checkCollision = (pacman, ghosts) => {
-    let isGhostCollided = false
+    let isGhostCollided = false;
 
-    //todo redo collision
-    // console.log("pac", pacman.pos, pacman.left, pacman.top);
-    // ghosts.forEach((ghost) => {
-    //     console.log("gho", ghost.pos, ghost.left, ghost.top, ghost.name);
-    // });
-
-    const collidedGhost = ghosts.find((ghost) => pacman.pos === ghost.pos);
+    const collidedGhost = ghosts.find((ghost) =>
+        //check, that ghost and pacman overlap vertically
+        (((ghost.currentTop >= pacman.currentTop) && (ghost.currentTop <= pacman.currentTop + CELL_SIZE)
+        && (ghost.currentLeft >= pacman.currentLeft) && (ghost.currentLeft <= pacman.currentLeft + CELL_SIZE)
+        //OR
+        ||
+        //check, that ghost and pacman overlap horisontally
+        (ghost.currentTop + CELL_SIZE >= pacman.currentTop) && (ghost.currentTop + CELL_SIZE <= pacman.currentTop + CELL_SIZE)
+        && (ghost.currentLeft + CELL_SIZE >= pacman.currentLeft) && (ghost.currentLeft + CELL_SIZE <= pacman.currentLeft + CELL_SIZE))
+        //check, that ghost and pacman are in one vertical or horisontal line
+        && (ghost.currentLeft == pacman.currentLeft || ghost.currentTop == pacman.currentTop))
+    );
 
     if (collidedGhost) {
         if (pacman.powerPill && collidedGhost.isScared) {
             // playAudio(soundGhost);
-            collidedGhost.setToPosition(collidedGhost.startPos);
+            collidedGhost.setToPosition(collidedGhost.startPos, true);
             collidedGhost.pos = collidedGhost.startPos;
             collidedGhost.setIsScared(false);
             score += 100;
         } else {
             gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
             gameBoard.rotateDiv(pacman.pos, 0);
-            isGhostCollided = true
+            isGhostCollided = true;
             gameOver(pacman, gameGrid);
         }
     }
@@ -209,7 +215,12 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     scoreTable.innerHTML = score;
 
     // Update countdown time
-    timeTable.innerHTML = Math.round(time--/10)
+    let newTime = Math.round(time--/10);
+    timeTable.innerHTML = newTime;
+   
+    if (newTime == 5) {
+        timeTable.style.animation =  "countdown 1s ease-in-out alternate infinite";
+    }
 
     window.requestAnimationFrame(function(timestamp) {
         gameLoop(timestamp, pacman, ghosts);
