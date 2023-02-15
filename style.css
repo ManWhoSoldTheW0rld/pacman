@@ -438,3 +438,13 @@ html, body {
     color: yellow;          
   }
 }
+
+@keyframes scary {
+  0% {
+    background: blue; 
+     
+  }
+  100% {
+    background: white;          
+  }
+}

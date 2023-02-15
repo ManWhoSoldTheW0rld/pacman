@@ -58,9 +58,10 @@ class Ghost extends Character {
             this.div.classList.add(OBJECT_TYPE.SCARED)
         } else {
             this.div.classList.remove(OBJECT_TYPE.SCARED)
+            this.div.style.animation = "";
         }
         this.isScared = value;
-    }
+        }  
 
     moveDiv() {
         super.moveDiv(this.dir);

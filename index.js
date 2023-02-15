@@ -36,6 +36,7 @@ let isGameStarted = false;
 let isGamePaused = false;
 let isComingFromPause = false;
 let isPillActive = false;
+let isGhostAnimationSet = false;
 let time = 600;
 let powerPillTime = 0;
 let LEVELCopy = [];
@@ -184,7 +185,8 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
             POWER_PILL_TIME
         );
 
-        isPillActive = true
+        isPillActive = true;
+        isGhostAnimationSet = false;
 
     }
 
@@ -192,6 +194,14 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     // or setting the time to 0 if he hasn't
     if (pacman.powerPill){
         powerPillTime -= 80;
+
+        if (powerPillTime < 2000 && !isGhostAnimationSet) {
+            ghosts.forEach((ghost) => {
+                ghost.div.classList.remove(OBJECT_TYPE.SCARED);
+                ghost.div.style.animation = "scary 0.1s ease-in-out alternate infinite";
+            });
+            isGhostAnimationSet = true;
+        }
     } else {
         powerPillTime = 0
     }
@@ -199,7 +209,13 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     // 7. Change ghost scare mode depending on powerpill
     if (pacman.powerPill !== powerPillActive || isPillActive ) {
         powerPillActive = pacman.powerPill;
-        ghosts.forEach((ghost) => (ghost.setIsScared(pacman.powerPill)))
+        ghosts.forEach((ghost) =>  {
+            if (!pacman.powerPill) {
+                isGhostAnimationSet = false;
+            }
+
+            ghost.setIsScared(pacman.powerPill)
+        });
     }
 
     if (gameBoard.dotCount === 0) {
