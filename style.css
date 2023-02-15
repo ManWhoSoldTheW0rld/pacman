@@ -380,9 +380,10 @@ html, body {
   100% 0,
   100% 15%,
   50% 50%,
+  100% 85%,
   100% 100%,
   0 100%);
-  animation: chew 0.3s linear forwards infinite;
+  animation: dead 1s linear forwards 1;
 }
 
 @keyframes chew {
@@ -391,11 +392,48 @@ html, body {
       0 0,
       100% 0,
       100% 50%,
-      15% 50%,
-      100% 50%,
+      100% 50%, 
       100% 100%,
       0 100%
     );
+  }
+}
+
+@keyframes dead {
+   20% {
+    clip-path: polygon(0 0,
+    65% 0,
+    50% 50%,
+    65% 100%,
+    0 100%);
+  }
+
+  40% {
+    clip-path: polygon(0 0,
+    45% 0,
+    50% 50%,
+    45% 100%,
+    0 100%);
+  } 
+
+  79% {
+    clip-path: polygon(0 0,
+    3% 0,
+    50% 50%,
+    3% 100%,
+    0 100%);
+  } 
+
+  80% {
+    clip-path: polygon(0 0%,
+    50% 50%,
+    0 100%);
+  } 
+
+  100% {
+    clip-path: polygon(0 35%,
+    50% 50%,
+    0 65%);
   }
 }
 

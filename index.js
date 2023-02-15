@@ -42,21 +42,22 @@ let powerPillTime = 0;
 let LEVELCopy = [];
 
 //Audio
-// function playAudio(audio) {
-//     const soundEffect = new Audio(audio);
-//     soundEffect.play();
-// }
+function playAudio(audio) {
+    const soundEffect = new Audio(audio);
+    soundEffect.play();
+}
 
 const gameOver = (pacman) => {
     previousScore = score;
     isGameOver = true;
-    // playAudio(soundGameOver);
+    playAudio(soundGameOver);
     document.removeEventListener('keydown', e => {
         pacman.handleKeyInput(e, gameBoard.objectExist);
     });
 
     if (!gameWin){
-        livesTable[0].parentNode.removeChild(livesTable[0])
+        livesTable[0].parentNode.removeChild(livesTable[0]);
+        pacman.div.style.animation = "dead 1s linear forwards 1";
     }
 
     if (gameWin == false && livesTable.length > 0){
@@ -92,7 +93,7 @@ const checkCollision = (pacman, ghosts) => {
 
     if (collidedGhost) {
         if (pacman.powerPill && collidedGhost.isScared) {
-            // playAudio(soundGhost);
+            playAudio(soundGhost);
             collidedGhost.setToPosition(collidedGhost.startPos, true);
             collidedGhost.pos = collidedGhost.startPos;
             collidedGhost.setIsScared(false);
@@ -161,7 +162,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
     // 5. Check if Packman eats a dot
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
-        // playAudio(soundDot);
+        playAudio(soundDot);
         LEVELCopy[pacman.pos] = 0
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.DOT]);
         
@@ -171,7 +172,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
     // 6. Check if Packman eats a pill
     if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.PILL)) {
-        // playAudio(soundPill);
+        playAudio(soundPill);
         LEVELCopy[pacman.pos] = 0
         gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PILL]);
 
@@ -197,8 +198,10 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
         if (powerPillTime < 2000 && !isGhostAnimationSet) {
             ghosts.forEach((ghost) => {
-                ghost.div.classList.remove(OBJECT_TYPE.SCARED);
-                ghost.div.style.animation = "scary 0.1s ease-in-out alternate infinite";
+                if (ghost.isScared) {
+                    ghost.div.classList.remove(OBJECT_TYPE.SCARED);
+                    ghost.div.style.animation = "scary 0.1s ease-in-out alternate infinite";
+                }
             });
             isGhostAnimationSet = true;
         }
@@ -247,7 +250,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 }
 
 const startGame = () => {
-    // playAudio(soundGameStart);
+    playAudio(soundGameStart);
     powerPillActive = false;
     gameWin = false;
     isGameOver = false;
@@ -283,6 +286,7 @@ const startGame = () => {
     }
 
     const pacman = new Pacman(2, 287);
+    pacman.div.style.animation = "chew 0.3s linear forwards infinite";
 
     document.addEventListener('keydown', (e) => {
         pacman.handleKeyInput(e, gameBoard.objectExist)
