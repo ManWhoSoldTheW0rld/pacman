@@ -6,6 +6,10 @@ Pacman in JS.
 
 Danilo Cangucu and Iuliia Chipsanova
 
+## Usage
+- You can start the server activating the "Live server" extension on
+Visual Code Studio or writing "&>/dev/null python3 -m http.server &" on your terminal.
+
 ## Game information
 
 - You can change Pac-Man's direction using the arrows Up, Down, Left and Right.
