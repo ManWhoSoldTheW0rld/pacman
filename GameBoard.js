@@ -107,10 +107,6 @@ class GameBoard {
         return this.grid[pos].classList.contains(object);
     };
     
-    rotateDiv(pos, deg) {
-        this.grid[pos].style.transform = `rotate(${deg}deg)`;
-    }
-
     moveGhost(character, pacman, ghosts) {
         if (character.shouldMove()) {
             const { nextMovePos, direction} = character.getNextMove(
@@ -128,11 +124,7 @@ class GameBoard {
             const { nextMovePos, direction} = character.getNextMove(
                 this.objectExist
             );
-
-            if (character.rotation && nextMovePos !== character.pos) {
-                character.rotate();    
-            }
-
+            
             character.setNewPos(nextMovePos, direction);
         }
     }

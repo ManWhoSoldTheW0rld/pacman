@@ -117,7 +117,6 @@ const checkCollision = (pacman, ghosts) => {
             score += 100;
         } else {
             gameBoard.removeObject(pacman.pos, [OBJECT_TYPE.PACMAN]);
-            gameBoard.rotateDiv(pacman.pos, 0);
             isGhostCollided = true;
             gameOver(pacman, gameGrid);
         }

@@ -12,6 +12,8 @@ class Character {
         this.top = 0;
         this.left = 0;
         this.isStepDone = true;
+        this.rotation = false;
+        
 
         this.div  = this.getDiv();
         this.setToPosition(startPos, true);
@@ -34,22 +36,19 @@ class Character {
         this.timer++;
     }
 
-    setToPosition(position, isStartPosition) {
+    setToPosition(position) {
         let top = Math.floor(position / GRID_SIZE);
         let left = position % GRID_SIZE;
  
-        this.setDivPosition(position);
- 
-        this.div.style.left =  left * CELL_SIZE + "px";
-        this.div.style.top = top * CELL_SIZE +"px";
+        this.setNextPositionForAnimation(position);
 
-        if (isStartPosition) {
-            this.currentLeft = this.left;
-            this.currentTop = this.top;
-        }
+        this.setTransform(left * CELL_SIZE, top * CELL_SIZE);
+
+        this.currentLeft = this.left;
+        this.currentTop = this.top;     
     }
  
-     setDivPosition(position) {
+     setNextPositionForAnimation(position) {
          let top = Math.floor(position / GRID_SIZE);
          let left = position % GRID_SIZE;
  
@@ -64,34 +63,48 @@ class Character {
 
         if (dir !== null) {
             if (dir.code == DIRECTIONS.ArrowLeft.code) {
-                let newLeft = parseInt(this.div.style.left) - CELL_SIZE / this.speed; 
+                let newLeft = parseInt(this.currentLeft) - CELL_SIZE / this.speed; 
                 if (newLeft >= this.left) {
-                    this.div.style.left = newLeft + "px";
+
+                    this.setTransform(newLeft, this.top);
+
                     this.currentLeft = newLeft;
                     this.isStepDone = (newLeft === this.left);
                 }
             } else if (dir.code == DIRECTIONS.ArrowUp.code) {
-                let newTop = parseInt(this.div.style.top) - CELL_SIZE / this.speed;
+                let newTop = parseInt(this.currentTop) - CELL_SIZE / this.speed;
                 if (newTop >= this.top) {
-                    this.div.style.top = newTop + "px";
+
+                    this.setTransform(this.left, newTop);
+
                     this.currentTop = newTop;
                     this.isStepDone = newTop === this.top;
                 }
             } else if (dir.code == DIRECTIONS.ArrowRight.code) {
-                let newLeft = parseInt(this.div.style.left) +  CELL_SIZE / this.speed; 
+                let newLeft = parseInt(this.currentLeft) +  CELL_SIZE / this.speed; 
                 if (newLeft <= this.left) {
-                    this.div.style.left = newLeft + "px";
+
+                    this.setTransform(newLeft, this.top);
+
                     this.currentLeft = newLeft;
                     this.isStepDone = (newLeft === this.left);
                 }
             } else if (dir.code == DIRECTIONS.ArrowDown.code) {
-                let newTop = parseInt(this.div.style.top) + CELL_SIZE / this.speed;
+                let newTop = parseInt(this.currentTop) + CELL_SIZE / this.speed;
                 if (newTop <= this.top) {
-                    this.div.style.top = newTop + "px";
+                    this.setTransform(this.left, newTop);
+
                     this.currentTop = newTop;
                     this.isStepDone = (newTop === this.top);
                 }
             }
+        }
+    }
+
+    setTransform(left, top) {
+        this.div.style.transform = `translate(${left}px,${top}px)`;
+        if (this.rotation && this.dir) {
+            this.div.style.transform = this.div.style.transform  +  `rotate(${this.dir.rotation}deg)`;
         }
     }
 }

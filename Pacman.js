@@ -31,13 +31,9 @@ class Pacman extends Character {
             nextMovePos = this.pos;
         }
 
-        this.setDivPosition(nextMovePos);
+        this.setNextPositionForAnimation(nextMovePos);
 
         return {nextMovePos, direction : this.dir};
-    }
-
-    rotate() {
-        this.div.style.transform = `rotate(${this.dir.rotation}deg)`;
     }
 
     setNewPos(nextMovePos) {

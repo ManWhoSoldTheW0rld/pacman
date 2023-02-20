@@ -23,6 +23,7 @@ class Ghost extends Character {
     }
 
     getNextMove(objectExist, pacman, ghosts) {
+        
         if (this.isScared) {
             const { nextMovePos, direction } = this.scaryFunc(
                 this.pos,
@@ -31,7 +32,7 @@ class Ghost extends Character {
                 this.scaryTarget,
             );
 
-            this.setDivPosition(nextMovePos);
+            this.setNextPositionForAnimation(nextMovePos);
             return { nextMovePos, direction };
 
         } else {
@@ -43,7 +44,7 @@ class Ghost extends Character {
                 ghosts
             );
 
-            this.setDivPosition(nextMovePos);
+            this.setNextPositionForAnimation(nextMovePos);
             return { nextMovePos, direction };
         }
       }
