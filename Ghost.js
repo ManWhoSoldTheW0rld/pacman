@@ -22,38 +22,20 @@ class Ghost extends Character {
         return div;
     }
 
-    getNextMove(objectExist, pacman, ghosts) {
-        
+    setNextMove(objectExist, pacman, ghosts) {
+        let move;
         if (this.isScared) {
-            const { nextMovePos, direction } = this.scaryFunc(
-                this.pos,
-                this.dir,
-                objectExist,
-                this.scaryTarget,
-            );
-
-            this.setNextPositionForAnimation(nextMovePos);
-            return { nextMovePos, direction };
-
+            move = this.scaryFunc(this.pos, this.dir, objectExist, this.scaryTarget);
         } else {
-            const { nextMovePos, direction } = this.movement(
-                this.pos,
-                this.dir,
-                objectExist,
-                pacman,
-                ghosts
-            );
-
-            this.setNextPositionForAnimation(nextMovePos);
-            return { nextMovePos, direction };
+            move = this.movement(this.pos, this.dir, objectExist, pacman, ghosts);
         }
-      }
-    
-    setNewPos(nextMovePos, direction) {
-        this.pos = nextMovePos;
-        this.dir = direction;
-    }
 
+        this.setNextPositionForAnimation(move.nextMovePos);
+
+        this.pos = move.nextMovePos;
+        this.dir = move.direction;
+    }
+    
     setIsScared(value) {
         if (value) {
             this.div.classList.add(OBJECT_TYPE.SCARED)

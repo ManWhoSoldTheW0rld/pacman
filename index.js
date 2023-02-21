@@ -170,8 +170,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
     previousTimeStamp = timestamp;
 
     // 1. Move Pacman
-    gameBoard.movePacman(pacman);
-    pacman.moveDiv();
+    gameBoard.moveCharacter(pacman);
     
     // 2. Check Ghost collision on the old positions
     if (checkCollision(pacman, ghosts)) {
@@ -180,8 +179,7 @@ const gameLoop = (timestamp, pacman, ghosts = null) => {
 
     // 3. Move ghosts
     ghosts.forEach((ghost) => {
-        gameBoard.moveGhost(ghost, pacman, ghosts);
-        ghost.moveDiv();
+        gameBoard.moveCharacter(ghost, pacman, ghosts);
     });
 
      // 4. Do a new ghost collision check on the new positions

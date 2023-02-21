@@ -107,26 +107,16 @@ class GameBoard {
         return this.grid[pos].classList.contains(object);
     };
     
-    moveGhost(character, pacman, ghosts) {
+    moveCharacter(character, pacman, ghosts) {
         if (character.shouldMove()) {
-            const { nextMovePos, direction} = character.getNextMove(
+            character.setNextMove(
                 this.objectExist, 
                 pacman,
                 ghosts
             );
-            //todo add moving logic here
-            character.setNewPos(nextMovePos, direction);
         }
-    }
 
-    movePacman(character) {
-        if (character.shouldMove()) {
-            const { nextMovePos, direction} = character.getNextMove(
-                this.objectExist
-            );
-            
-            character.setNewPos(nextMovePos, direction);
-        }
+        character.moveDiv();
     }
 
     static createGameBoard(DOMGrid, level) {

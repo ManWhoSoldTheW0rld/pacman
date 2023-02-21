@@ -48,7 +48,7 @@ class Character {
         this.currentTop = this.top;     
     }
  
-     setNextPositionForAnimation(position) {
+    setNextPositionForAnimation(position) {
          let top = Math.floor(position / GRID_SIZE);
          let left = position % GRID_SIZE;
  

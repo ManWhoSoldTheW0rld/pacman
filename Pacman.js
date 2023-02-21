@@ -19,7 +19,7 @@ class Pacman extends Character {
         return div;
     }
 
-    getNextMove(objectExist) {
+    setNextMove(objectExist) {
         let nextMovePos = this.pos + this.dir.movement;
 
         if (this.pos == LEFT_TUNNEL && this.dir == DIRECTIONS.ArrowLeft) {
@@ -33,13 +33,9 @@ class Pacman extends Character {
 
         this.setNextPositionForAnimation(nextMovePos);
 
-        return {nextMovePos, direction : this.dir};
-    }
-
-    setNewPos(nextMovePos) {
         this.pos = nextMovePos;
     }
-
+    
     moveDiv() {
         if (this.isStepDone || (this.prevDir == null)) {
             this.prevDir = this.dir;
