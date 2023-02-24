@@ -1,4 +1,4 @@
-import {LEVEL, OBJECT_TYPE, GRID_SIZE, GRID_LENGHT, CELL_SIZE} from './setup.js';
+import {LEVELS, OBJECT_TYPE, GRID_SIZE, GRID_LENGHT, CELL_SIZE} from './setup.js';
 import {blinky, pinky, inky, clyde, scared} from './ghostmoves.js';
 
 import GameBoard from './GameBoard.js';
@@ -26,7 +26,7 @@ const instructions = document.getElementsByClassName('instructions');
 //Game Const
 const POWER_PILL_TIME = 10000; //ms
 const GLOBAL_SPEED = 80; //ms
-const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
+const gameBoard = GameBoard.createGameBoard(gameGrid, LEVELS[0].maze);
 
 //Initial Setup
 let score = 0;
@@ -46,6 +46,7 @@ let time = 600;
 let powerPillTime = 0;
 let LEVELCopy = [];
 let isShowingInstructions = false;
+let level = 0;
 
 //Audio
 function playAudio(audio) {
@@ -81,12 +82,20 @@ const gameOver = (pacman) => {
         }
     } else {
         if (gameWin){
-            playAudio(soundWin)
+            if (LEVELS.length -1 > level) {
+                level ++;
+                LEVELCopy = [...LEVELS[level].maze];
+                gameWin =  false;
+                setTimeout(() => {startGame()}, 3000)
+            } else {
+                playAudio(soundWin)
+                gameBoard.showGameStatus(gameWin)
+                isGameStarted = false;
+            }
+            
         } else {
             playAudio(soundGameOver)
         }
-        gameBoard.showGameStatus(gameWin)
-        isGameStarted = false;
     }
 
     timeTable.style.animation =  "";
@@ -299,8 +308,8 @@ const startGame = () => {
             }
             gameBoard.createLivesTable()
         }
-        gameBoard.createGrid(LEVEL);
-        gameBoard.createMaze(LEVEL);
+        gameBoard.createGrid(LEVELS[level].maze);
+        gameBoard.createMaze(LEVELS[level].maze);
 
         gameBoard.gameWinDiv.classList.add('hide');
 
@@ -336,7 +345,7 @@ document.addEventListener('keydown', (e) => {
             instructions[2].classList.add("hide");
         }
         
-        LEVELCopy = [...LEVEL]
+        LEVELCopy = [...LEVELS[level].maze]
         instructions[0].classList.add("hide");
         instructions[1].classList.add("hide");
         startGame();

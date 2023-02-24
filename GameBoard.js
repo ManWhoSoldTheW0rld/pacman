@@ -46,22 +46,22 @@ class GameBoard {
     }
 
     createMaze(level){
-        level.forEach((square, i) => {
-            if (square >= 10 && square < 24){
+        level.forEach((typeId, i) => {
+            if (typeId >= 10 && typeId < 24) {
                 document.getElementById(i).classList.add(CLASS_LIST[1]);
-            } else if (square == 24){
+            } else if (typeId == 24){
                 document.getElementById(i).classList.add(CLASS_LIST[9]);
             }
-            if (square >= 12 && square <= 15 || square == 24){
+            if (typeId >= 12 && typeId <= 15 || typeId == 24){
                 const innerDiv = document.createElement('div');
-                innerDiv.classList.add(CLASS_LIST[square]+'_2');
+                innerDiv.classList.add(CLASS_LIST[typeId]+'_2');
                 document.getElementById(i).appendChild(innerDiv);
             }
-            if (square == 20 || square == 21){
+            if (typeId == 20 || typeId == 21){
                 const innerDiv = document.createElement('div');
                 const innerDiv2 = document.createElement('div');
-                innerDiv.classList.add(CLASS_LIST[square]+'_2');
-                innerDiv2.classList.add(CLASS_LIST[square]+'_3');
+                innerDiv.classList.add(CLASS_LIST[typeId]+'_2');
+                innerDiv2.classList.add(CLASS_LIST[typeId]+'_3');
                 document.getElementById(i).appendChild(innerDiv);
                 document.getElementById(i).appendChild(innerDiv2);
             }
