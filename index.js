@@ -26,7 +26,7 @@ const instructions = document.getElementsByClassName('instructions');
 //Game Const
 const POWER_PILL_TIME = 10000; //ms
 const GLOBAL_SPEED = 80; //ms
-const gameBoard = GameBoard.createGameBoard(gameGrid, LEVELS[0].maze);
+const gameBoard = GameBoard.createGameBoard(gameGrid, LEVELS[0].maze, LEVELS[0].color);
 
 //Initial Setup
 let score = 0;
@@ -300,7 +300,7 @@ const startGame = () => {
 
     if (isGameStarted){
         gameBoard.createGrid(LEVELCopy);
-        gameBoard.createMaze(LEVELCopy);
+        gameBoard.createMaze(LEVELCopy, LEVELS[level].color);
     } else {
         if (livesTable.length != 4){
             if (livesTable.length != 0){
@@ -309,7 +309,7 @@ const startGame = () => {
             gameBoard.createLivesTable()
         }
         gameBoard.createGrid(LEVELS[level].maze);
-        gameBoard.createMaze(LEVELS[level].maze);
+        gameBoard.createMaze(LEVELS[level].maze, LEVELS[level].color);
 
         gameBoard.gameWinDiv.classList.add('hide');
 

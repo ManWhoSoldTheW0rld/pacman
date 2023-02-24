@@ -1,4 +1,4 @@
-import {GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST} from './setup.js';
+import {GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST, LEVELS} from './setup.js';
 
 class GameBoard {
     constructor(DOMGrid) {
@@ -45,10 +45,11 @@ class GameBoard {
         });
     }
 
-    createMaze(level){
+    createMaze(level, color){
         level.forEach((typeId, i) => {
             if (typeId >= 10 && typeId < 24) {
                 document.getElementById(i).classList.add(CLASS_LIST[1]);
+                document.getElementById(i).style.backgroundColor = color;
             } else if (typeId == 24){
                 document.getElementById(i).classList.add(CLASS_LIST[9]);
             }
@@ -119,10 +120,10 @@ class GameBoard {
         character.moveDiv();
     }
 
-    static createGameBoard(DOMGrid, level) {
+    static createGameBoard(DOMGrid, level, color) {
         const board = new this(DOMGrid);
         board.createGrid(level);
-        board.createMaze(level);
+        board.createMaze(level, color);
         board.createLivesTable();
         return board;
     }
