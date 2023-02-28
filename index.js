@@ -348,10 +348,15 @@ document.addEventListener('keydown', (e) => {
             isGamePaused = false
             instructions[2].classList.add("hide");
         }
-        
+
         LEVELCopy = [...LEVELS[level].maze]
         instructions[0].classList.add("hide");
         instructions[1].classList.add("hide");
+        
+        if (isGameOver){
+            location.reload()
+        }
+
         startGame();
     }
 
