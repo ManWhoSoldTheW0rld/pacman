@@ -22,6 +22,7 @@ const scoreTable = document.querySelector('#score');
 const livesTable = document.getElementsByClassName('lives');
 const timeTable = document.querySelector('#time');
 const instructions = document.getElementsByClassName('instructions');
+const levelSpan = document.getElementById("level")
 
 //Game Const
 const POWER_PILL_TIME = 10000; //ms
@@ -42,7 +43,7 @@ let isComingFromPause = false;
 let isPillActive = false;
 let isGhostAnimationSet = false;
 let isPauseSoundPlayed = false;
-let time = 600;
+let time = 990;
 let powerPillTime = 0;
 let LEVELCopy = [];
 let isShowingInstructions = false;
@@ -292,7 +293,10 @@ const startGame = () => {
     powerPillActive = false;
     gameWin = false;
     isGameOver = false;
-    time = 600;
+    time = 990;
+
+    //set new level
+    levelSpan.innerHTML = level + 1;
 
     if (previousScore != 0){
         score = previousScore
@@ -357,6 +361,10 @@ document.addEventListener('keydown', (e) => {
     } else if ((e.key === 'p' || e.key === 'P') && isGameStarted && isGamePaused && !isShowingInstructions){
         isGamePaused = false
         isComingFromPause = true
+    }
+
+    if (e.key  === "r" || e.key  === "R") {
+        location.reload();
     }
 
     if ((e.key === 'i' || e.key === 'I') && !isShowingInstructions && !isGameOver && !isGamePaused){
