@@ -306,7 +306,7 @@ const startGame = () => {
         gameBoard.createGrid(LEVELCopy);
         gameBoard.createMaze(LEVELCopy, LEVELS[level].color);
     } else {
-        if (livesTable.length != 4){
+        if (livesTable.length != 6){
             if (livesTable.length != 0){
                 gameBoard.deleteLivesTable()
             }

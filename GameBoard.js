@@ -73,7 +73,7 @@ class GameBoard {
 
     createLivesTable(){
         let lives = document.getElementById('lives');
-        for (let i = 1; i < 4; i++){
+        for (let i = 1; i < 6; i++){
             let life = document.createElement('div');
             life.classList.add('lives');
             life.classList.add('life');
