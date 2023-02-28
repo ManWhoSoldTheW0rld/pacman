@@ -72,7 +72,7 @@ const gameOver = (pacman) => {
         livesTable[0].classList.remove('hide')
     }
 
-    if (gameWin == false && livesTable.length > 0){
+    if (gameWin == false && livesTable.length >= 0){
 
         if (livesTable.length == 0){
             gameBoard.showGameStatus(gameWin)
@@ -86,7 +86,7 @@ const gameOver = (pacman) => {
             if (LEVELS.length -1 > level) {
                 level ++;
                 LEVELCopy = [...LEVELS[level].maze];
-                gameWin =  false;
+                gameWin = false;
                 setTimeout(() => {startGame()}, 3000)
             } else {
                 playAudio(soundWin)
@@ -99,7 +99,7 @@ const gameOver = (pacman) => {
         }
     }
 
-    timeTable.style.animation =  "";
+    timeTable.style.animation = "";
 }
 
 const checkCollision = (pacman, ghosts) => {
